@@ -8,9 +8,9 @@ optionnel : configuer github pour utiliser des cles ssh (permet d'eviter de tape
 cloner le depot
 
     cd src
-    git clone git@github.com:gauthierpetetin/pictever_server.git
-    (ou https://github.com/gauthierpetetin/pictever_server.git si pas de ssh)
-    cd pictever_server
+    git clone git@github.com:gauthierpetetin/shyft_server.git
+    (ou https://github.com/gauthierpetetin/shyft_server.git si pas de ssh)
+    cd shyft_server
 
 savoir dans quelle branche on se trouve:
 
@@ -19,16 +19,16 @@ savoir dans quelle branche on se trouve:
 -> une seule branche pour le moment :master
 
 rajouter la remote de l'application heroku : sur le site de heroku / app / settings /info se trouve une url : 
-(notif -> git@heroku.com:notif-server.git)
-(instant_server -> git@heroku.com:instant-server.git)
+(notif -> git@heroku.com:notification-server-keoapp.git)
+(instant_server -> git@heroku.com:instant-server-keoapp.git)
 
-    git remote add heroku_instant git@heroku.com:instant-server.git
-    git remote add heroku_notif git@heroku.com:notif-server.git
+    git remote add heroku_instant git@heroku.com:instant-server-keoapp.git
+    git remote add heroku_notifs git@heroku.com:notification-server-keoapp.git
 
 test : voir les logs de l'appli heroku
 
-    heroku logs --app instant-server --tail
-    heroku logs --app notif-server --tail
+    heroku logs --app instant-server-keoapp --tail
+    heroku logs --app notification-server-keoapp --tail
 
 developpement : 
  petit changement -> a faire dans la branche master
@@ -60,9 +60,9 @@ une fois finis, merge dans master
 
 changer de branch pour la version de production.
 instant_server :
-    git checkout instant_server_prod
+    git checkout instant_server_production
 notification :
-    git checkout notif_server_prod
+    git checkout notification_server_production
 
 pour verifier 
 
@@ -80,16 +80,16 @@ si vous etes dans instant_server vous devez voir
 ou 
     web: gunicorn instant_server.server:app --workers $WEB_CONCURRENCY --log-file -
 sinon pour les notifications
-    notif: python notif_server.py
+    notif: python notifications_server.py
 
 deploiement:
 push heroku puis push github
 notification
-    git push heroku_notif notif_server_prod:master
-    git push origin notif_server_prod
+    git push heroku_notifs notification_server_production:master
+    git push origin notification_server_production
 instant_server
-    git push heroku_instant instant_server_prod:master
-    git push origin instant_server_prod
+    git push heroku_instant instant_server_production:master
+    git push origin instant_server_production
 retour dans la branche master
    git checkout master
 

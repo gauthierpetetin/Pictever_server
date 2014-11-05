@@ -1,0 +1,16 @@
+Flask==0.10.1
+Flask-Login==0.2.11
+python-postmark==0.4.3
+Jinja2==2.7.2
+MarkupSafe==0.19
+Werkzeug==0.9.4
+apns==1.1.2
+argparse==1.2.1
+itsdangerous==0.24
+mongoengine==0.8.7
+pycparser==2.10
+pymongo==2.7
+python-gcm==0.1.5
+wsgiref==0.1.2
+twilio==3.6.6
+gunicorn==19.1.0
