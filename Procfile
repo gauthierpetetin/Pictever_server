@@ -1,1 +1,1 @@
-notif python notif_server.py
+notif: python notif_server.py
