@@ -1,5 +1,4 @@
 import json
-import twilio
 import sys
 import time
 import datetime
@@ -9,7 +8,6 @@ from instant_server.server.error_handler import prod_error_instant_mail
 from instant_server.db import models
 models.connect()
 from mongoengine.queryset import DoesNotExist
-from instant_server.twilio_api import send_sms, code_generator
 from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import HTTPException
 

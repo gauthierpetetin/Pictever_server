@@ -11,11 +11,12 @@ import time
 
 def connect(read_only=False):
     if read_only:
-        READONLY_URI = 'mongodb://readdb:napoleongrouchy@ds051160.mongolab.com:51160/heroku_app31307485'
+mongodb://<dbuser>:<dbpassword>@ds051630.mongolab.com:51630/pictever_test
+        READONLY_URI = 'mongodb://readdb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_test'
         print "connecting to pictever database (read only)..."
         db.connect('picteverdb', host=READONLY_URI)
     else:
-        PRODUCTION_URI = 'mongodb://modifydb:napoleongrouchy@ds051160.mongolab.com:51160/heroku_app31307485'
+        PRODUCTION_URI = 'mongodb://modifydb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_test'
         print "connecting to pictever database ..."
         db.connect('picteverdb', host=PRODUCTION_URI)
 
@@ -203,9 +204,9 @@ class User(db.Document):
             answer.append(d)
         return answer
 
-    def get_first_phone(self):
+    def get_platform_instance(self):
         try:
-            return PlatformInstance.objects.with_id(self.first_phone)
+            return PlatformInstance.objects.with_id(self.platform_instance)
         except:
             return None
 
@@ -227,7 +228,7 @@ class User(db.Document):
         infos = {}
         
         if num is None:
-            num = PlatformInstance.objects.with_id(self.first_phone)
+            num = PlatformInstance.objects.with_id(self.platform_instance)
 
         infos["phoneNumber1"] = num.phone_num
         infos["email"] = self.email
@@ -341,11 +342,11 @@ class WebApp(db.Document):
     supported_version = db.ListField(default=[])
 
     @staticmethod
-    def get_server_url_from_plateforminstance(plateforme_instance=None):
-        if plateforme_instance is None:
+    def get_server_url_from_plateform_instance(plateform_instance=None):
+        if plateform_instance is None:
             return WebApp.objects().order_by('id').first().url
         else:
-            app = WebApp.objects(supported_version=plateforme_instance.app_version).first() 
+            app = WebApp.objects(supported_version=plateform_instance.app_version).first() 
             if app is not None:
                 return app.url
             else:

@@ -11,11 +11,11 @@ import time
 
 def connect(read_only=False):
     if read_only:
-        READONLY_URI = 'mongodb://readdb:napoleongrouchy@ds051160.mongolab.com:51160/heroku_app31307485'
+        READONLY_URI = 'mongodb://readdb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_test'
         print "connecting to pictever database (read only)..."
         db.connect('picteverdb', host=READONLY_URI)
     else:
-        PRODUCTION_URI = 'mongodb://modifydb:napoleongrouchy@ds051160.mongolab.com:51160/heroku_app31307485'
+        PRODUCTION_URI = 'mongodb://modifydb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_test'
         print "connecting to pictever database ..."
         db.connect('picteverdb', host=PRODUCTION_URI)
 
