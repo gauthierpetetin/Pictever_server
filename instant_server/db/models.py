@@ -15,7 +15,7 @@ def connect(read_only=False):
         print "connecting to pictever database (read only)..."
         db.connect('picteverdb', host=READONLY_URI)
     else:
-        PRODUCTION_URI = 'mongodb://copydb:passittothenextlevel@ds051160.mongolab.com:51160/heroku_app31307485'
+        PRODUCTION_URI = 'mongodb://testdb:test@ds051160.mongolab.com:51160/heroku_app31307485'
         print "connecting to pictever database ..."
         db.connect('picteverdb', host=PRODUCTION_URI)
 
