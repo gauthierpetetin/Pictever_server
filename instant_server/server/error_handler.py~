@@ -14,8 +14,8 @@ def prod_error_mail(error_num, object, details, critical_level=0, server="INSTAN
     message = PMMail(
         api_key=os.environ.get('POSTMARK_API_KEY'),
         subject="[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object),
-        sender="dev@keo-app.com",
-        to="dev@keo-app.com",
+        sender="dev@pictever.com",
+        to="dev@pictever.com",
         text_body=details,
         tag="")
 
