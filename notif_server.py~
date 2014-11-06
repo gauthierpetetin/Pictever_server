@@ -1,4 +1,4 @@
-from notifications_server import notifications
+from notif_server import notif
 import sys
 from instant_server.db import models
 models.connect()

@@ -38,7 +38,7 @@ def check_new_message():
                         details=details,
                         critical_level="CRITICAL")
 		else:
-                    ans = notifications.send_notification(message, plat)
+                    ans = notif.send_notification(message, plat)
             else:
                 print "reg id is None"
                 prod_error_notif_mail(

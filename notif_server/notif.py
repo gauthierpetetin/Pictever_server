@@ -8,7 +8,7 @@ models.connect()
 
 GCM_API_KEY = "AIzaSyCWn_dNhBHFITuVAOAG2r_KDlV5KROg-Oo"
 
-print "loading CEM files ? ", os.path.isfile('notifications_server/certificates/ShyftCertdev.pem')
+print "loading CEM files ? ", os.path.isfile('notif_server/certificates/ShyftCertdev.pem')
 
 
 def send_notification(message, receiver_phone):

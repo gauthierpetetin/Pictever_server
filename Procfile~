@@ -1,1 +1,5 @@
-notif python notif_server.py
+<<<<<<< HEAD
+web: gunicorn instant_server.server:app --workers 3 --log-file -
+=======
+notif: python notif_server.py
+>>>>>>> notif_pictever_prod
