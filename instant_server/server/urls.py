@@ -44,7 +44,7 @@ def login():
 		"bucket_name":"picteverbucket",
 		"cloudfront":"http://d380gpjtb0vxfw.cloudfront.net/",
 		"android_update_link": "https://play.google.com/store/apps/details?id=com.pict.ever",
-		"ios_update_link": "https://itunes.apple.com/us/app/shyft-chat-with-the-future/id910033123"})
+		"ios_update_link": "donnemoileliengogo"})
         else:
             #wrong password
             abort(401)

@@ -11,11 +11,11 @@ import time
 
 def connect(read_only=False):
     if read_only:
-        READONLY_URI = 'mongodb://readdb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_prod'
+        READONLY_URI = 'mongodb://readdb:passittothenextlevel@ds051160.mongolab.com:51160/heroku_app31307485'
         print "connecting to pictever database (read only)..."
         db.connect('picteverdb', host=READONLY_URI)
     else:
-        PRODUCTION_URI = 'mongodb://modifydb:passittothenextlevel@ds051630.mongolab.com:51630/pictever_prod'
+        PRODUCTION_URI = 'mongodb://modifydb:passittothenextlevel@ds051160.mongolab.com:51160/heroku_app31307485'
         print "connecting to pictever database ..."
         db.connect('picteverdb', host=PRODUCTION_URI)
 
@@ -125,7 +125,7 @@ class User(db.Document):
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
-        num = self.get_platform().phone_num
+        num = self.get_platform_instance().phone_num
         for b in Bottle.objects(active=True, phone_num=num):
             mes = Message.objects.with_id(b.message_id)
             mes.receiver_id = self.id
@@ -134,7 +134,7 @@ class User(db.Document):
 
 #    def check_messages_in_a_bottle(self):
 #        """ loop over all messages to check if the"""
-#        num = self.get_first_phone().phone_num
+#        num = self.get_platform_instance().phone_num
 #        for m in Message.objects(receiver_phone=num):
 #            m.receiver_id = self.id
 #	    m.is_blocked = False
@@ -153,7 +153,7 @@ class User(db.Document):
     
     def get_my_status(self):
         """ the status of the user depends on the number of messages sent - and not yet delivered - by the user in the future"""
-	if self.get_first_phone().phone_num == "0033668648212" or self.get_first_phone().phone_num == "0033612010848":
+	if self.get_platform_instance().phone_num == "0033668648212" or self.get_platform_instance().phone_num == "0033612010848":
 	    return "Founder"
 	else:
 	    counter = 0
@@ -189,9 +189,9 @@ class User(db.Document):
 		"message_id": str(m.id),
 		"received_at": str(time.mktime(m.delivery_time.utctimetuple())),
                 "from_email": sender.email,
-                "from_numero": sender.get_first_phone().phone_num,
+                "from_numero": sender.get_platform_instance().phone_num,
                 "from_id": str(sender.id), 
-                "message": m.content,
+                "message": m.message,
                 "created_at": str(time.mktime(m.created_at.utctimetuple())),
                 "photo_id": str(m.photo_id),
                 "video_id": str(m.video_id),
@@ -213,7 +213,7 @@ class User(db.Document):
         return True
 
     def is_active(self):
-        return self.is_user_active
+        return self.active
     
     def is_anonymous(self):
         """ no anonymous users for now """

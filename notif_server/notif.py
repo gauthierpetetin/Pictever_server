@@ -16,7 +16,6 @@ def send_notification(message, receiver_phone):
     #Handle push notifications to android and ios
     if receiver_phone.os == "android":
         return send_android_notification(receiver_phone.reg_id, message)
-
     elif receiver_phone.os == "ios":
         if receiver_phone.phone_num == "0033612010848":
             send_ios_notif_gauthier(receiver_phone.reg_id, message)
