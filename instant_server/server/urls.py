@@ -92,15 +92,10 @@ def sign_up():
 @app.route('/define_first_phone_number', methods=['POST'])
 @login_required
 def define_first_phone_number():
-    print "start define"
     os = request.form['os']
-    print os
     reg_id = request.form['reg_id']
-    print reg_id
     phone_number = request.form['phone_number']
-    print phone_number
-    code = code_generator() 
-    print code
+    code = 'samplecode' 
     try:
 	if current_user.get_platform_instance() is None:
 	    if current_user.get_contact_from_num(phone_number) is not None:
