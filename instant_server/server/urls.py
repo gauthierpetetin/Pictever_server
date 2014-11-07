@@ -33,14 +33,14 @@ def login():
             login_user(user)
             return json.dumps({
                 "user_id": str(user.id),
-                "web_app_url": models.WebApp.get_server_url_from_plateform_instance(user.get_platform_instance()),
+                "web_app_url": "http://instant-pictever.herokuapp.com/", #models.WebApp.get_server_url_from_plateform_instance(user.get_platform_instance()),
 		"ios_version_needed": "1.0",
 		"android_version_needed": "1.0",
 		"force_update": "false",
 		"aws_account_id":"090152412356",
-		"cognito_pool_id":"us-east-1:a17c5334-6843-49c0-8336-fbb36c40a6eb",
-		"cognito_role_unauth":"arn:aws:iam::090152412356:role/Cognito_TimeAppUnauth_DefaultRole",
-		"cognito_role_auth":"arn:aws:iam::090152412356:role/Cognito_TimeAppAuth_DefaultRole",
+		"cognito_pool_id":"us-east-1:955ad734-2aa9-4cfa-81c5-de98bd19652b",
+		"cognito_role_unauth":"arn:aws:iam::090152412356:role/PicteverUnAuth",
+		"cognito_role_auth":"arn:aws:iam::090152412356:role/Cognito_PicteverAuth_DefaultRole",
 		"bucket_name":"picteverbucket",
 		"cloudfront":"http://d380gpjtb0vxfw.cloudfront.net/",
 		"android_update_link": "https://play.google.com/store/apps/details?id=com.pict.ever",
