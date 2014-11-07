@@ -8,7 +8,7 @@ models.connect()
 
 GCM_API_KEY = "AIzaSyCWn_dNhBHFITuVAOAG2r_KDlV5KROg-Oo"
 
-print "loading CEM files ? ", os.path.isfile('notif_server/certificates/ShyftCertdev.pem')
+print "loading CEM files ? ", os.path.isfile('notif_server/certificates/PicteverCertdev.pem')
 
 
 def send_notification(message, receiver_phone):
@@ -50,8 +50,8 @@ def send_ios_notif_gauthier(reg_id, message):
         #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
         
         # APN to use when in production mode :
-        path_cert = 'certificates/ShyftCertdev.pem'
-        path_key = 'certificates/ShyftKeydev.pem'
+        path_cert = 'certificates/PicteverCertdev.pem'
+        path_key = 'certificates/PicteverKeydev.pem'
         cert_path = os.path.join(os.path.dirname(__file__), path_cert)
         key_path = os.path.join(os.path.dirname(__file__), path_key)
         my_apns = APNs(use_sandbox=True, cert_file=cert_path, key_file=key_path)
