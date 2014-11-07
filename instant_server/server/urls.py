@@ -96,7 +96,7 @@ def define_first_phone_number():
     reg_id = request.form['reg_id']
     phone_number = request.form['phone_number']
     code = code_generator() 
-    print phone_number
+    print os, reg_id, phone_number, code
     try:
 	if current_user.get_platform_instance() is None:
 	    if current_user.get_contact_from_num(phone_number) is not None:
