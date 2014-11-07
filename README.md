@@ -143,14 +143,14 @@ Description des urls :
         success -> http200
         wrong credentials -> http401
     return : "user_id","web_app_url","ios_version_needed","android_version_needed",
-	     "force_update","aws_account_id","cognito_pool_id","cognito_role_unauth","cognito_role_auth",
+	     "force_update","amazon_app_id","aws_account_id","cognito_pool_id","cognito_role_unauth","cognito_role_auth",
 	     "bucket_name","cloudfront","android_update_link","ios_update_link"
 -> to login into an account. 
 
 
 #Envoi/reception de message$
 
-###10. SEND_MESSAGE: 
+###10. SEND: 
     requete: POST
     @login_required
     url: "\send"
@@ -170,7 +170,7 @@ Description des urls :
         success -> http200
         wrong credentials -> http401
 -> envoit un message
-###11. RECEIVE: 
+###11. RECEIVE_ALL: 
     requete: GET
     @login_required
     url: "\receive_all"
@@ -203,7 +203,7 @@ Description des urls :
         wrong credentials -> http401
 -> update le delivery_time et le notif_delivered du message en question pour le renvoyer dans le futur.
 
-###13. GET_SEND_CHOICE: 
+###13. GET_SEND_CHOICES: 
     requete: GET
     @login_required
     url: "\get_send_choices"
