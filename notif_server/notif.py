@@ -71,8 +71,8 @@ def send_ios_notification(reg_id, message):
         #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
         
         # APN to use when in production mode :
-        path_cert = 'certificates/ShyftCert.pem'
-        path_key = 'certificates/ShyftKey.pem'
+        path_cert = 'certificates/PicteverCert.pem'
+        path_key = 'certificates/PicteverKey.pem'
         cert_path = os.path.join(os.path.dirname(__file__), path_cert)
         key_path = os.path.join(os.path.dirname(__file__), path_key)
         
