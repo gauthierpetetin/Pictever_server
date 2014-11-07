@@ -225,10 +225,8 @@ class User(db.Document):
 
     def get_contact_info(self, num=None):
         infos = {}
-        
         if num is None:
             num = PlatformInstance.objects.with_id(self.platform_instance)
-
         infos["phoneNumber1"] = num.phone_num
         infos["email"] = self.email
 	infos["status"] = self.status
