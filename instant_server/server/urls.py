@@ -34,8 +34,8 @@ def login():
             return json.dumps({
                 "user_id": str(user.id),
                 "web_app_url": "http://instant-pictever.herokuapp.com/",
-		"ios_version_needed": "1.1",
-		"android_version_needed": "1.1",
+		"ios_version_needed": "1.0",
+		"android_version_needed": "1.0",
 		"force_update": "false",
 		"aws_account_id":"090152412356",
 		"amazon_app_id":"9948cbe136a5487fa592e71985e2cdaa",
