@@ -28,14 +28,10 @@ def check_new_message():
 	    plat = receiver.get_platform_instance()
             if plat.reg_id is not None:
 		if plat.reg_id=="" or plat.reg_id=="(null)":
-	    	    details = "receiver_id : ", str(receiver.id)
-		    details += " phone : ", str(plat.phone_num)
-		    details += " os : ", str(plat.os)
-		    details += " email : " , str(receiver.email)
                     prod_error_notif_mail(
                         error_num=100,
                         object="reg id is empty or null",
-                        details=details,
+                        details="{} {}".format(sys.exc_info(), message.receiver_id),
                         critical_level="CRITICAL")
 		else:
                     ans = notif.send_notification(message, plat)
@@ -60,7 +56,7 @@ def check_new_message():
             print "error when sending notification"
             prod_error_notif_mail(
                 error_num=102,
-                object=" sending notification",
+                object="sending notification",
                 details="{}".format(sys.exc_info()),
                 critical_level="CRITICAL")
             print "Unexpected error:", sys.exc_info()
