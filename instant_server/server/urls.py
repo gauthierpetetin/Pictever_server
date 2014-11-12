@@ -372,14 +372,14 @@ def block_contacts():
     except HTTPException as e:
         prod_error_instant_mail(
             error_num=3,
-            object="{} upload contact".format(e),
+            object="{} block contact".format(e),
             details="{}".format(sys.exc_info()),
             critical_level="ERROR")
         raise e
     except:
         prod_error_instant_mail(
             error_num=2,
-            object="500 upload contact",
+            object="500 block contact",
             details="{}".format(sys.exc_info()),
             critical_level="CRITICAL")
         print "Unexpected error:", sys.exc_info()
