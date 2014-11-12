@@ -122,6 +122,7 @@ class User(db.Document):
     created_at = db.DateTimeField(default=datetime.datetime.fromtimestamp(1412121600),required=True)
     platform_instance = db.ObjectIdField(default=None) 
     status = db.StringField(default="Newbie")
+    verification_code = db.StringField(default="keo")
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
