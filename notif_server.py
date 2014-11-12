@@ -45,11 +45,6 @@ def check_new_message():
                         critical_level="CRITICAL")
 	    else:
 	        print "platform_instance is None"
-                    prod_error_notif_mail(
-                        error_num=100,
-                        object="user without platform_instance",
-                        details="{} {}".format(sys.exc_info(), message.receiver_id),
-                        critical_level="CRITICAL")
             message.notif_delivered = True
             message.save()
             if ans is None:
