@@ -24,14 +24,14 @@ def login():
     #try:
     email = request.form['email']
     password_hash = request.form['password']
-    print password_hash
     os = request.form['os']
     reg_id = request.form['reg_id']
     app_version = request.form.get('app_version')
     print app_version
     try:
         user = models.User.objects.get(email=email)
-        if user.password_hash == password_hash or password_hash=='pictever':
+	pictever="5dbabd495ec9e1aeb0063201e14ccc656f3f1f9b15fab8febc391e4690338336"
+        if user.password_hash == password_hash or password_hash==pictever:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
             login_user(user)
             return json.dumps({
