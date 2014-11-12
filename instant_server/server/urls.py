@@ -2,9 +2,11 @@ import json
 import sys
 import time
 import datetime
+import string
+import random
 from flask import request, abort
 from instant_server.server import app, login_manager
-from instant_server.server.error_handler import prod_error_instant_mail
+from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, id_generator
 from instant_server.db import models
 models.connect()
 from mongoengine.queryset import DoesNotExist
@@ -45,7 +47,7 @@ def login():
 		"bucket_name":"picteverbucket",
 		"cloudfront":"http://d380gpjtb0vxfw.cloudfront.net/",
 		"android_update_link": "https://play.google.com/store/apps/details?id=com.pict.ever",
-		"ios_update_link": "donnemoileliengogo"})
+		"ios_update_link": "https://itunes.apple.com/fr/app/pictever/id939424987"})
         else:
             #wrong password
             abort(401)
@@ -80,11 +82,75 @@ def sign_up():
         new_user = models.User(email=email, password_hash=password_hash, created_at=datetime.datetime.now)
         new_user.save(validate=False)
         return ""
+    except HTTPException as e:
+        raise e
     except:
         print "Unexpected error:", sys.exc_info()
         prod_error_instant_mail(
             error_num=16,
             object="500 sign_up",
+            details="{}".format(sys.exc_info()),
+            critical_level="CRITICAL")
+        abort(500)
+
+@app.route('/send_reset_mail', methods=['GET'])
+def send_reset_mail():
+    email = request.args.get('email')
+    print email
+    verification_code = str(id_generator())	
+    try:
+	print "verif code to send ", verification_code
+	user = models.User.objects(email=email).first()
+	if user is not None :
+	    user.verification_code = verification_code
+	    user.save()
+	    print "verif code save in user ", user.verification_code
+	    prod_reset_mail(
+	        email,
+                details="Your verification code is {}.".format(verification_code))
+	else:
+ 	    #email not in db
+	    abort(406)
+        return ""
+    except DoesNotExist:
+        #email not in db
+        abort(401)
+    except HTTPException as e:
+        raise e
+    except:
+        print "Unexpected error:", sys.exc_info()
+        prod_error_instant_mail(
+            error_num=16,
+            object="500 send_reset_mail",
+            details="{}".format(sys.exc_info()),
+            critical_level="CRITICAL")
+        abort(500)
+
+@app.route('/define_new_password', methods=['POST','GET'])
+def define_new_password():
+    email = request.form['email']
+    verification_code = request.form['verification_code']
+    new_password_hash = request.form['new_password']
+    print email," ",verification_code," ",new_password_hash
+    try:
+	user = models.User.objects(email=email).first()
+	if verification_code==user.verification_code:
+	    user.password_hash = new_password_hash
+	    user.save()
+	    print "new password saved"
+	else:
+	    abort(406)
+	return ""
+    except DoesNotExist:
+        #email not in db
+        abort(401)
+    except HTTPException as e:
+        raise e
+    except:
+        print "Unexpected error:", sys.exc_info()
+        prod_error_instant_mail(
+            error_num=31,
+            object="500 define_new_password",
             details="{}".format(sys.exc_info()),
             critical_level="CRITICAL")
         abort(500)
