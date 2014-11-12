@@ -26,22 +26,30 @@ def check_new_message():
                 message.delete()
                 print "id {}".format(message.receiver_id)
 	    plat = receiver.get_platform_instance()
-            if plat.reg_id is not None:
-		if plat.reg_id=="" or plat.reg_id=="(null)":
+	    if plat is not None:
+                if plat.reg_id is not None:
+		    if plat.reg_id=="" or plat.reg_id=="(null)":
+                        prod_error_notif_mail(
+                            error_num=100,
+                            object="reg id is empty or null",
+                            details="{} {}".format(sys.exc_info(), message.receiver_id),
+                            critical_level="CRITICAL")
+		    else:
+                        ans = notif.send_notification(message, plat)
+                else:
+                    print "reg id is None"
                     prod_error_notif_mail(
                         error_num=100,
-                        object="reg id is empty or null",
+                        object="user without reg id",
                         details="{} {}".format(sys.exc_info(), message.receiver_id),
                         critical_level="CRITICAL")
-		else:
-                    ans = notif.send_notification(message, plat)
-            else:
-                print "reg id is None"
-                prod_error_notif_mail(
-                    error_num=100,
-                    object="user without reg id",
-                    details="{} {}".format(sys.exc_info(), message.receiver_id),
-                    critical_level="CRITICAL")
+	    else:
+	        print "platform_instance is None"
+                    prod_error_notif_mail(
+                        error_num=100,
+                        object="user without platform_instance",
+                        details="{} {}".format(sys.exc_info(), message.receiver_id),
+                        critical_level="CRITICAL")
             message.notif_delivered = True
             message.save()
             if ans is None:
