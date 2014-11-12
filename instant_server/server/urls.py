@@ -24,6 +24,7 @@ def login():
     #try:
     email = request.form['email']
     password_hash = request.form['password']
+    print password_hash
     os = request.form['os']
     reg_id = request.form['reg_id']
     app_version = request.form.get('app_version')
