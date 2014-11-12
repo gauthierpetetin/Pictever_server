@@ -130,8 +130,8 @@ class User(db.Document):
         for b in Bottle.objects(active=True, phone_num=num):
             mes = Message.objects.with_id(b.message_id)
             mes.receiver_id = self.id
-	    if mes.delivery_time < datetime.datetime.now:
-	    	mes.delivery_time = datetime.datetime.now
+	    print "bottle delivery time", str(mes.delivery_time)
+	    print "now", str(datetime.datetime.now)
 	    mes.is_blocked = False
 	    mes.save()
 
