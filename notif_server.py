@@ -6,7 +6,6 @@ from instant_server.server.error_handler import prod_error_notif_mail
 from datetime import datetime
 import time
 
-
 def check_new_message():
     messages = models.Message.objects(notif_delivered=False, receiver_id__exists=True,delivery_time__lte=datetime.now())
     for message in messages:
