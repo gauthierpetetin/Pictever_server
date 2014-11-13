@@ -13,7 +13,6 @@ def check_new_message():
         #print "sending notif for message : ", message.id, " content : ", message.content
         try:
 	    if message.is_blocked==False:
-		print m
             	ans = None
             	#send classic notification
             	receiver = models.User.objects.with_id(message.receiver_id)
