@@ -205,8 +205,8 @@ class User(db.Document):
                      "receive_label": m.receive_label,
                      "receive_color":m.receive_color,
                      "version": m.version
-                 }
-                 answer.append(d)
+                }
+                answer.append(d)
         return answer
 
     def get_platform_instance(self):
