@@ -190,21 +190,21 @@ class User(db.Document):
         answer = []
         for m in messages:
 	    if m.is_blocked==False:
-            	sender = User.objects.with_id(m.sender_id)
-            	d = {
-		     "message_id": str(m.id),
-		     "received_at": str(time.mktime(m.delivery_time.utctimetuple())),
-                     "from_email": sender.email,
-                     "from_numero": sender.get_platform_instance().phone_num,
-                     "from_id": str(sender.id), 
-                     "message": m.message,
-                     "created_at": str(time.mktime(m.created_at.utctimetuple())),
-                     "photo_id": str(m.photo_id),
-                     "video_id": str(m.video_id),
-                     "sound_id": str(m.sound_id),
-                     "receive_label": m.receive_label,
-                     "receive_color":m.receive_color,
-                     "version": m.version
+                sender = User.objects.with_id(m.sender_id)
+                d = {
+		    "message_id": str(m.id),
+		    "received_at": str(time.mktime(m.delivery_time.utctimetuple())),
+                    "from_email": sender.email,
+                    "from_numero": sender.get_platform_instance().phone_num,
+                    "from_id": str(sender.id), 
+                    "message": m.message,
+                    "created_at": str(time.mktime(m.created_at.utctimetuple())),
+                    "photo_id": str(m.photo_id),
+                    "video_id": str(m.video_id),
+                    "sound_id": str(m.sound_id),
+                    "receive_label": m.receive_label,
+                    "receive_color":m.receive_color,
+                    "version": m.version
                 }
                 answer.append(d)
         return answer

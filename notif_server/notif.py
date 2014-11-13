@@ -30,8 +30,7 @@ def send_android_notification(reg_id, message):
     gcm = GCM(GCM_API_KEY)
     sender_id = message.sender_id
     sender = models.User.objects.with_id(sender_id)
-    data = {'sender_email': sender.email,
-            'sender_phone': str(sender.get_platform_instance().phone_num),
+    data = {'message': message,
 	    'receiver_reg_id': str(reg_id)}
     print data
     try:
@@ -48,7 +47,6 @@ def send_ios_notif_gauthier(reg_id, message):
     try:
         # APN to use when in developer mode :
         #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
-        
         # APN to use when in production mode :
         path_cert = 'certificates/PicteverCertDev.pem'
         path_key = 'certificates/PicteverKeyDev.pem'
