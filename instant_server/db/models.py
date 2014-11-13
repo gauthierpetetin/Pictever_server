@@ -134,6 +134,8 @@ class User(db.Document):
 	        mes.delivery_time = datetime.datetime.now()
 	    mes.is_blocked = False
 	    mes.save()
+	    b.active=False
+	    b.save()
 
 #    def check_messages_in_a_bottle(self):
 #        """ loop over all messages to check if the"""
@@ -183,27 +185,28 @@ class User(db.Document):
     def get_messages_since(self, timestamp, now_ts):
         previous = datetime.datetime.fromtimestamp(timestamp)
         now = datetime.datetime.fromtimestamp(now_ts)
-        messages = Message.objects(receiver_id=self.id, delivery_time__gte=previous, delivery_time__lte=now,is_blocked=False)
+        messages = Message.objects(receiver_id=self.id, delivery_time__gte=previous, delivery_time__lte=now)
         print messages.count() 
         answer = []
         for m in messages:
-            sender = User.objects.with_id(m.sender_id)
-            d = {
-		"message_id": str(m.id),
-		"received_at": str(time.mktime(m.delivery_time.utctimetuple())),
-                "from_email": sender.email,
-                "from_numero": sender.get_platform_instance().phone_num,
-                "from_id": str(sender.id), 
-                "message": m.message,
-                "created_at": str(time.mktime(m.created_at.utctimetuple())),
-                "photo_id": str(m.photo_id),
-                "video_id": str(m.video_id),
-                "sound_id": str(m.sound_id),
-                "receive_label": m.receive_label,
-                "receive_color":m.receive_color,
-                "version": m.version
-            }
-            answer.append(d)
+	    if m.is_blocked==False:
+            	sender = User.objects.with_id(m.sender_id)
+            	d = {
+		     "message_id": str(m.id),
+		     "received_at": str(time.mktime(m.delivery_time.utctimetuple())),
+                     "from_email": sender.email,
+                     "from_numero": sender.get_platform_instance().phone_num,
+                     "from_id": str(sender.id), 
+                     "message": m.message,
+                     "created_at": str(time.mktime(m.created_at.utctimetuple())),
+                     "photo_id": str(m.photo_id),
+                     "video_id": str(m.video_id),
+                     "sound_id": str(m.sound_id),
+                     "receive_label": m.receive_label,
+                     "receive_color":m.receive_color,
+                     "version": m.version
+                 }
+                 answer.append(d)
         return answer
 
     def get_platform_instance(self):
