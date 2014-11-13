@@ -30,8 +30,7 @@ def send_android_notification(reg_id, message):
     gcm = GCM(GCM_API_KEY)
     sender_id = message.sender_id
     sender = models.User.objects.with_id(sender_id)
-    data = {'message': message,
-	    'receiver_reg_id': str(reg_id)}
+    data = {'receiver_reg_id': str(reg_id)}
     print data
     try:
         gcm.plaintext_request(registration_id=reg_id, data=data)

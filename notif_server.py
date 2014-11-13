@@ -7,7 +7,7 @@ from datetime import datetime
 import time
 
 def check_new_message():
-    messages = models.Message.objects(notif_delivered=False, receiver_id__exists=True,delivery_time__lte=datetime.now())
+    messages = models.Message.objects(notif_delivered=False,receiver_id__exists=True,delivery_time__lte=datetime.now())
     for message in messages:
         #print "sending notif for message : ", message.id, " content : ", message.content
         try:
