@@ -12,7 +12,7 @@ def check_new_message():
     for message in messages:
         #print "sending notif for message : ", message.id, " content : ", message.content
         try:
-	    if m.is_blocked==False:
+	    if message.is_blocked==False:
 		print m
             	ans = None
             	#send classic notification
