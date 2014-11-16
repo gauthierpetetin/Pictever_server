@@ -191,12 +191,16 @@ class User(db.Document):
         for m in messages:
 	    if m.is_blocked==False:
                 sender = User.objects.with_id(m.sender_id)
-		if sender is not None and sender.get_platform_instance() is not None:
+		if sender is not None:
+		    if sender.get_platform_instance() is None:
+		        from_numero = sender.email
+		    else:
+			from_numero = sender.get_platform_instance().phone_num
                     d = {
 		        "message_id": str(m.id),
 		        "received_at": str(time.mktime(m.delivery_time.utctimetuple())),
                         "from_email": sender.email,
-                        "from_numero": sender.get_platform_instance().phone_num,
+                        "from_numero": from_numero,
                         "from_id": str(sender.id), 
                         "message": m.message,
                         "created_at": str(time.mktime(m.created_at.utctimetuple())),
