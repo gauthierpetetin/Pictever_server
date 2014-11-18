@@ -42,7 +42,14 @@ class Message(db.Document):
     @staticmethod
     def resend(message_id):
         mes = Message.objects.with_id(message_id)
-	rand = random.randint(2678400, 8035200)
+	user = User.objects.with_id(mes.receiver_id)
+	counter = user.get_number_of_future_messages()
+	delta = time.mktime(mes.delivery_time.utctimetuple()) - time.mktime(mes.created_at.utctimetuple())
+	print "first delta", delta
+	if delta < 10000000 or counter < 10:
+	    delta = random.randint(3*10000000//4,5*10000000//4)
+	rand = random.randint(3*delta//4, 5*delta//4)
+	print "rand",rand
 	t = time.mktime(mes.delivery_time.utctimetuple()) + rand
 	r = ReceiveLabel.get_receive_label(rand)
 	mes.receive_label = r.label
@@ -335,7 +342,7 @@ class SendChoice(db.Document):
 
     def get_delivery_time(self, send_time):
         if self.time_random:
-            time_delay = random.randint(2678400, 8035200)  # between 1 month and 3 months
+            time_delay = random.randint(5259487, 25000000)  # between 2 months and 8 months
             return send_time + time_delay
         if self.time_absolute:
             return self.time_delay
