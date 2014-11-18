@@ -14,8 +14,8 @@ def prod_error_mail(error_num, object, details, critical_level=0, server="INSTAN
     message = PMMail(
         api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e", #os.environ.get('POSTMARK_API_KEY'),
         subject="[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object),
-        sender="dev@pictever.com",
-        to="dev@pictever.com",
+        sender="error@pictever.com",
+        to="error@pictever.com",
         text_body=details,
         tag="")
 
@@ -26,7 +26,7 @@ def prod_reset_mail(receiver,details):
     message = PMMail(
         api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
         subject="Your verification code to reset your password",
-        sender="dev@pictever.com",
+        sender="team@pictever.com",
         to=receiver,
         text_body=details,
         tag="")
