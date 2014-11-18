@@ -8,11 +8,11 @@ import time
 
 def check_new_message():
     messages = models.Message.objects(notif_delivered=False,receiver_id__exists=True,delivery_time__lte=datetime.now())
-    print messages
     for message in messages:
         #print "sending notif for message : ", message.id, " content : ", message.content
         try:
 	    if message.is_blocked==False:
+		print message
             	ans = None
             	#send classic notification
 		if message.receiver_id is None:
@@ -75,6 +75,7 @@ def message_check_loop():
         critical_level="INFO")
     while True:
         try:
+	    print "[]"
             check_new_message()
         except:
             prod_error_notif_mail(
