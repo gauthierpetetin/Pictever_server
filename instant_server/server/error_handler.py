@@ -33,6 +33,17 @@ def prod_reset_mail(receiver,details):
     print "verification email sent"
     message.send()
 
+def prod_signup_mail(email):
+    message = PMMail(
+        api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
+        subject="New user on Pictever!",
+        sender="team@pictever.com",
+        to="team@pictever.com",
+        text_body=email,
+        tag="")
+    print "verification email sent"
+    message.send()
+
 def id_generator(size=4, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
 

@@ -6,7 +6,7 @@ import string
 import random
 from flask import request, abort
 from instant_server.server import app, login_manager
-from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, id_generator
+from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, prod_signup_mail, id_generator
 from instant_server.db import models
 models.connect()
 from mongoengine.queryset import DoesNotExist
@@ -82,6 +82,7 @@ def sign_up():
     try:
         new_user = models.User(email=email, password_hash=password_hash, created_at=datetime.datetime.now)
         new_user.save(validate=False)
+	prod_signup_mail(email)
         return ""
     except HTTPException as e:
         raise e
@@ -165,14 +166,26 @@ def define_first_phone_number():
     phone_number = request.form['phone_number']
     code = 'samplecode' 
     try:
-	if current_user.get_platform_instance() is None:
-	    if current_user.get_contact_from_num(phone_number) is not None:
+	plat = current_user.get_platform_instance()
+	other_plats = current_user.get_contact_from_num(phone_number)
+	if plat is None:
+	    if other_plats is not None:
+		print other_plats
                 print "phone number {} already taken...".format(phone_number)
                 abort(406)
 	else:
-	    if current_user.get_platform_instance().phone_num != phone_number and current_user.get_contact_from_num(phone_number)["user_id"] != str(current_user.id):
-                print "phone number {} already taken...".format(phone_number)
-                abort(406)
+	    print plat.phone_num,plat.reg_id
+	    if plat.phone_num != phone_number:
+		if other_plats is not None and other_plats["user_id"] != str(current_user.id):
+                    print "phone number {} already taken...".format(phone_number)
+                    abort(406)
+	    else:
+		if plat.reg_id==reg_id:
+		    print "no new platform created"
+		    current_user.check_bottles()
+                    current_user.save()
+                    return ""
+	print "new platform created"
         platform = models.PlatformInstance(
             is_verified=False,
             verification_code=code,
