@@ -1,9 +1,10 @@
 from notif_server import notif
+from threading import Thread
 import sys
 from instant_server.db import models
 models.connect()
-from instant_server.server.error_handler import prod_error_notif_mail
-from datetime import datetime
+from instant_server.server.error_handler import prod_error_notif_mail,prod_phone_mail
+from datetime import datetime,timedelta
 import time
 
 def check_new_message():
@@ -41,7 +42,7 @@ def check_new_message():
                             ans = notif.send_notification(message, plat)
 			    if ans is None:
                     	        print "notification delivery failed"
-		                details = "ans is None"
+		                details = "ans is None, reg_id={}".format(plat.reg_id)
                                 prod_error_notif_mail(
                                     error_num=101,
                                     object="notification delivery failed",
@@ -67,12 +68,9 @@ def check_new_message():
                 critical_level="CRITICAL")
             print "Unexpected error:", sys.exc_info()
 
+
 def message_check_loop():
-    prod_error_notif_mail(
-        error_num=0,
-        object=" notification start",
-        details="{}".format("Le service d'envoit de notification vient de demarrer."),
-        critical_level="INFO")
+    print " notification start"
     while True:
         try:
 	    print "[]"
@@ -85,6 +83,30 @@ def message_check_loop():
                 critical_level="CRITICAL")
         time.sleep(5)
 
+def send_no_phone_mail():
+    while True:
+	try:
+	    for u in models.User.objects(created_at__gte=datetime.now() - timedelta(hours=64),created_at__lte=datetime.now() - timedelta(hours=24)):
+                if u.get_platform_instance() is None and u.phone_mail_sent==False:
+		    print u.email
+		    prod_phone_mail(u.email)
+		    u.phone_mail_sent=True
+		    u.save()
+	except:
+            prod_error_notif_mail(
+                error_num=103,
+                object=" send no phone mail loop",
+                details="{}".format(sys.exc_info()),
+                critical_level="CRITICAL")
+	time.sleep(60000)
 
 if __name__ == '__main__':
-    message_check_loop()
+    t1 = Thread(target = message_check_loop)
+    t2 = Thread(target = send_no_phone_mail)
+    t1.setDaemon(True)
+    t2.setDaemon(True)
+    t1.start()
+    t2.start()
+    while True:
+        pass
+    

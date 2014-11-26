@@ -130,6 +130,7 @@ class User(db.Document):
     platform_instance = db.ObjectIdField(default=None) 
     status = db.StringField(default="Newbie")
     verification_code = db.StringField(default="keo")
+    phone_mail_sent = db.BooleanField(default=False)
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
