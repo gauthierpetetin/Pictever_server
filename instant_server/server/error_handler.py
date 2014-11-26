@@ -41,7 +41,30 @@ def prod_signup_mail(email):
         to="team@pictever.com",
         text_body=email,
         tag="")
-    print "verification email sent"
+    message.send()
+    with open ("welcome_mail.txt", "r") as myfile:
+    	data=myfile.read()
+    welcome = PMMail(
+        api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
+        subject="Welcome on board !",
+        sender="team@pictever.com",
+        to="martin.charrel@gmail.com",
+        text_body=data,
+        tag="")
+    welcome.send()
+    print "welcome email sent"
+
+def prod_phone_mail(email):
+    with open ("no_phone.txt", "r") as myfile:
+    	data=myfile.read()
+    message = PMMail(
+        api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
+        subject="Continue you experience on Pictever",
+        sender="team@pictever.com",
+        to="martin.charrel@gmail.fr",
+        text_body=data,
+        tag="")
+    print "email to continue your experience sent"
     message.send()
 
 def id_generator(size=4, chars=string.ascii_uppercase + string.digits):
