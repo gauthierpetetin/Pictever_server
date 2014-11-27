@@ -48,7 +48,7 @@ def prod_signup_mail(email):
         api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
         subject="Welcome on board !",
         sender="team@pictever.com",
-        to="martin.charrel@gmail.com",
+        to=email,
         text_body=data,
         tag="")
     welcome.send()
@@ -61,7 +61,7 @@ def prod_phone_mail(email):
         api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
         subject="Continue you experience on Pictever",
         sender="team@pictever.com",
-        to="martin.charrel@gmail.fr",
+        to=email,
         text_body=data,
         tag="")
     print "email to continue your experience sent"
