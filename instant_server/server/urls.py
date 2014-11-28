@@ -80,9 +80,10 @@ def sign_up():
         print models.User.objects(email=email).count()
         abort(406)
     try:
-        new_user = models.User(email=email, password_hash=password_hash, created_at=datetime.datetime.now)
+        new_user = models.User(email=email,password_hash=password_hash,created_at=datetime.datetime.now)
         new_user.save(validate=False)
-	prod_signup_mail(email)
+	if "@" in email:
+	    prod_signup_mail(email.replace(" ",""))
         return ""
     except HTTPException as e:
         raise e
@@ -230,9 +231,10 @@ def send():
     try:
         if delivery_option is not None:
             delivery_option = json.loads(delivery_option)
+	    delivery_time_ts,receive_label,receive_color = models.SendChoice.process_delivery_option(delivery_option)
         receiver_ids = json.loads(receiver_ids)
         for receiver_id in receiver_ids:
-            models.Message.add_to_db(current_user, message, receiver_id, delivery_option, photo_id,video_id,sound_id)
+            models.Message.add_to_db(current_user, message, receiver_id,delivery_time_ts,receive_label,receive_color, photo_id,video_id,sound_id)
         return ""
     except HTTPException as e:
         prod_error_instant_mail(
