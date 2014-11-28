@@ -61,7 +61,7 @@ class Message(db.Document):
 	
 
     @staticmethod
-    def add_to_db(current_user, message, receiver_id, delivery_option,photo_id,video_id,sound_id):
+    def add_to_db(current_user, message, receiver_id,delivery_time_ts,receive_label,receive_color,photo_id,video_id,sound_id):
         if receiver_id[:2] == "id":
             print "id detected"
             receiver_id = receiver_id[2:]
@@ -80,7 +80,7 @@ class Message(db.Document):
                 details="{}".format("error cannot understand id : {}".format(receiver_id)),
                 critical_level="ERROR")
             return None
-        delivery_time_ts, receive_label,receive_color = SendChoice.process_delivery_option(delivery_option)
+        #delivery_time_ts, receive_label,receive_color = SendChoice.process_delivery_option(delivery_option)
         delivery_time = datetime.datetime.fromtimestamp(delivery_time_ts)
         mes = Message(
             message=message,
