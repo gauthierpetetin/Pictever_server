@@ -131,6 +131,9 @@ class User(db.Document):
     status = db.StringField(default="Newbie")
     verification_code = db.StringField(default="keo")
     phone_mail_sent = db.BooleanField(default=False)
+    facebook_id = db.StringField(default=None) 
+    facebook_name = db.StringField(default=None)
+    facebook_birthday = db.StringField(default=None)
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
@@ -204,10 +207,18 @@ class User(db.Document):
 		        from_numero = sender.email
 		    else:
 			from_numero = sender.get_platform_instance().phone_num
+		    if sender.facebook_name is not None:
+			facebook_id=sender.facebook_id
+			facebook_name=sender.facebook_name
+		    else:
+			facebook_id=""
+			facebook_name=""
                     d = {
 		        "message_id": str(m.id),
 		        "received_at": str(time.mktime(m.delivery_time.utctimetuple())),
                         "from_email": sender.email,
+			"from_facebook_id": facebook_id,
+			"from_facebook_name": facebook_name,
                         "from_numero": from_numero,
                         "from_id": str(sender.id), 
                         "message": m.message,
@@ -248,6 +259,9 @@ class User(db.Document):
             num = PlatformInstance.objects.with_id(self.platform_instance)
         infos["phoneNumber1"] = num.phone_num
         infos["email"] = self.email
+	if self.facebook_id is not None : 
+	    infos["facebook_id"] = self.facebook_id
+	    infos["facebook_name"] = self.facebook_name
 	infos["status"] = self.status
         infos["user_id"] = str(self.id)
         return infos
