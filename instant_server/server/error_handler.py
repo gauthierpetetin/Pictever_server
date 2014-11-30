@@ -30,8 +30,11 @@ def prod_reset_mail(receiver,details):
         to=receiver,
         text_body=details,
         tag="")
-    print "verification email sent"
-    message.send()
+    try:
+    	message.send()
+	print "verification email sent"
+    except:
+	print "signup email not valid"
 
 def prod_signup_mail(email):
     message = PMMail(
@@ -51,8 +54,12 @@ def prod_signup_mail(email):
         to=email,
         text_body=data,
         tag="")
-    welcome.send()
-    print "welcome email sent"
+    try:
+    	message.send()
+	print "welcome email sent"
+    except:
+	print "signup email not valid"
+    
 
 def prod_phone_mail(email):
     with open ("no_phone.txt", "r") as myfile:
@@ -64,8 +71,11 @@ def prod_phone_mail(email):
         to=email,
         text_body=data,
         tag="")
-    print "email to continue your experience sent"
-    message.send()
+    try:
+    	message.send()
+	print "email to continue your experience sent"
+    except:
+	print "phone email not valid"
 
 def id_generator(size=4, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))

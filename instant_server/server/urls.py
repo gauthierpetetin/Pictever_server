@@ -27,34 +27,53 @@ def login():
     os = request.form['os']
     reg_id = request.form['reg_id']
     app_version = request.form.get('app_version')
-    print app_version
+    facebook_id = request.form.get('facebook_id')
+    facebook_name = request.form.get('facebook_name')
+    facebook_birthday = request.form.get('facebook_birthday')
+    print app_version,facebook_id,facebook_name,facebook_birthday
     try:
-        user = models.User.objects.get(email=email)
-	pictever="5dbabd495ec9e1aeb0063201e14ccc656f3f1f9b15fab8febc391e4690338336"
-        if user.password_hash == password_hash or password_hash==pictever:
+	if facebook_id is None or facebook_id=="":
+	    if email!="":
+	    	try:
+	    	    user = models.User.objects.get(email=email)
+	    	except DoesNotExist:
+		    abort(401)
+	    else:
+		abort(401)
+	else:
+	    try:
+	        user = models.User.objects.get(facebook_id=facebook_id)
+	    except DoesNotExist:
+		user = models.User.objects.get(email=email)
+		if user is not None:
+		    user.facebook_id=facebook_id
+		    user.facebook_name=facebook_name
+		    user.facebook_birthday=facebook_birthday
+		    user.save()
+		else:
+            	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
+       	    	    user.save(validate=False)
+        if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
             login_user(user)
             return json.dumps({
                 "user_id": str(user.id),
-                "web_app_url": "http://instant-pictever.herokuapp.com/",
-		"ios_version_needed": "1.0",
-		"android_version_needed": "1.0",
-		"force_update": "false",
-		"aws_account_id":"090152412356",
-		"amazon_app_id":"9948cbe136a5487fa592e71985e2cdaa",
-		"cognito_pool_id":"us-east-1:cf4486fa-e5e0-423f-9399-e6aae8d08e3f",
-		"cognito_role_unauth":"arn:aws:iam::090152412356:role/Cognito_PicteverUnauth_DefaultRole",
-		"cognito_role_auth":"arn:aws:iam::090152412356:role/Cognito_PicteverAuth_DefaultRole",
-		"bucket_name":"picteverbucket",
-		"cloudfront":"http://d380gpjtb0vxfw.cloudfront.net/",
-		"android_update_link": "https://play.google.com/store/apps/details?id=com.pict.ever",
-		"ios_update_link": "https://itunes.apple.com/fr/app/pictever/id939424987"})
+            	"web_app_url": "http://instant-pictever.herokuapp.com/",
+	   	"ios_version_needed": "1.0",
+	   	"android_version_needed": "1.0",
+	   	"force_update": "false",
+	  	"aws_account_id":"090152412356",
+	  	"amazon_app_id":"9948cbe136a5487fa592e71985e2cdaa",
+	  	"cognito_pool_id":"us-east-1:cf4486fa-e5e0-423f-9399-e6aae8d08e3f",
+	  	"cognito_role_unauth":"arn:aws:iam::090152412356:role/Cognito_PicteverUnauth_DefaultRole",
+	  	"cognito_role_auth":"arn:aws:iam::090152412356:role/Cognito_PicteverAuth_DefaultRole",
+	   	"bucket_name":"picteverbucket",
+	   	"cloudfront":"http://d380gpjtb0vxfw.cloudfront.net/",
+	   	"android_update_link": "https://play.google.com/store/apps/details?id=com.pict.ever",
+	   	"ios_update_link": "https://itunes.apple.com/fr/app/pictever/id939424987"})
         else:
             #wrong password
             abort(401)
-    except DoesNotExist:
-        #email not in db
-        abort(401)
     except HTTPException as e:
         prod_error_instant_mail(
             error_num=15,
@@ -136,7 +155,7 @@ def define_new_password():
     new_password_hash = request.form['new_password']
     print email," ",verification_code," ",new_password_hash
     try:
-	user = models.User.objects(email=email).first()
+	user = models.User.objects.get(email=email)
 	if verification_code==user.verification_code:
 	    user.password_hash = new_password_hash
 	    user.save()

@@ -89,7 +89,8 @@ def send_no_phone_mail():
 	    for u in models.User.objects(created_at__gte=datetime.now() - timedelta(hours=64),created_at__lte=datetime.now() - timedelta(hours=24)):
                 if u.get_platform_instance() is None and u.phone_mail_sent==False:
 		    print u.email
-		    prod_phone_mail(u.email)
+		    if "@" in u.email:
+	    		prod_phone_mail(u.email.replace(" ",""))
 		    u.phone_mail_sent=True
 		    u.save()
 	except:
