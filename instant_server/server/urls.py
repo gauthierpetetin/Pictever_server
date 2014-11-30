@@ -44,8 +44,15 @@ def login():
 	    try:
 	        user = models.User.objects.get(facebook_id=facebook_id)
 	    except DoesNotExist:
-            	user = models.User(email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
-       	    	user.save(validate=False)
+		user = models.User.objects.get(email=email)
+		if user is not None:
+		    user.facebook_id=facebook_id
+		    user.facebook_name=facebook_name
+		    user.facebook_birthday=facebook_birthday
+		    user.save()
+		else:
+            	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
+       	    	    user.save(validate=False)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
             login_user(user)
