@@ -55,7 +55,7 @@ def prod_signup_mail(email):
         text_body=data,
         tag="")
     try:
-    	message.send()
+    	welcome.send()
 	print "welcome email sent"
     except:
 	print "signup email not valid"
