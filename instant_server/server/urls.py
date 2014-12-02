@@ -35,6 +35,7 @@ def login():
 	if facebook_id is None or facebook_id=="":
 	    if email!="":
 	    	try:
+		    print email
 	    	    user = models.User.objects.get(email=email)
 	    	except DoesNotExist:
 		    abort(401)
@@ -44,13 +45,16 @@ def login():
 	    try:
 	        user = models.User.objects.get(facebook_id=facebook_id)
 	    except DoesNotExist:
-		user = models.User.objects.get(email=email)
-		if user is not None:
-		    user.facebook_id=facebook_id
-		    user.facebook_name=facebook_name
-		    user.facebook_birthday=facebook_birthday
-		    user.save()
+		if email!="":
+		    user = models.User.objects(email=email).first()
+		    if user is not None:
+		    	print user.id
+		    	user.facebook_id=facebook_id
+		    	user.facebook_name=facebook_name
+		    	user.facebook_birthday=facebook_birthday
+		    	user.save()
 		else:
+		    email=facebook_id + "@pictever.com"
             	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
        	    	    user.save(validate=False)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
