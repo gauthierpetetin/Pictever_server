@@ -259,9 +259,13 @@ class User(db.Document):
             num = PlatformInstance.objects.with_id(self.platform_instance)
         infos["phoneNumber1"] = num.phone_num
         infos["email"] = self.email
+	facebook_id=""
+	facebook_name=""
 	if self.facebook_id is not None : 
-	    infos["facebook_id"] = self.facebook_id
-	    infos["facebook_name"] = self.facebook_name
+	    facebook_id=self.facebook_id
+	    facebook_name=self.facebook_name
+	infos["facebook_id"] = facebook_id
+	infos["facebook_name"] = facebook_name
 	infos["status"] = self.status
         infos["user_id"] = str(self.id)
         return infos
@@ -306,7 +310,6 @@ class ReceiveLabel(db.Document):
             if counter >= r.inf and counter <= r.sup :
        		 return r
         return return_label
-   	
 
 class SendChoice(db.Document):
     active = db.BooleanField(default=False)
