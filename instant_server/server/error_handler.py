@@ -11,16 +11,18 @@ def prod_error_notif_mail(error_num, object, details, critical_level="INFO"):
 
 
 def prod_error_mail(error_num, object, details, critical_level=0, server="INSTANT-ERR"):
-    message = PMMail(
-        api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e", #os.environ.get('POSTMARK_API_KEY'),
-        subject="[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object),
-        sender="error@pictever.com",
-        to="error@pictever.com",
-        text_body=details,
-        tag="")
-
-    print "[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object),
-    message.send()
+    try:
+	message = PMMail(
+            api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e", #os.environ.get('POSTMARK_API_KEY'),
+            subject="[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object),
+            sender="error@pictever.com",
+            to="error@pictever.com",
+            text_body=details,
+            tag="")
+        print "[{}] [{}] [#{}] {}".format(server, critical_level, error_num, object)
+    	message.send()
+    except:
+	print "prod_error_mail failed"
 
 def prod_reset_mail(receiver,details):
     message = PMMail(
@@ -36,15 +38,31 @@ def prod_reset_mail(receiver,details):
     except:
 	print "signup email not valid"
 
+def prod_facebook_mail(facebook_name):
+    message = PMMail(
+        api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
+        subject="New user on Pictever - facebook!",
+        sender="team@pictever.com",
+        to="team@pictever.com",
+        text_body=facebook_name,
+        tag="")
+    try:
+    	message.send()
+    except:
+	print "prod_facebook_mail has failed"
+
 def prod_signup_mail(email):
     message = PMMail(
         api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
-        subject="New user on Pictever!",
+        subject="New user on Pictever - signup!",
         sender="team@pictever.com",
         to="team@pictever.com",
         text_body=email,
         tag="")
-    message.send()
+    try:
+    	message.send()
+    except:
+	print "prod_signup_mail has failed"
     with open ("welcome_mail.txt", "r") as myfile:
     	data=myfile.read()
     welcome = PMMail(
@@ -56,9 +74,8 @@ def prod_signup_mail(email):
         tag="")
     try:
     	welcome.send()
-	print "welcome email sent"
     except:
-	print "signup email not valid"
+	print "prod_signup_mail has failed"
     
 
 def prod_phone_mail(email):
@@ -73,9 +90,8 @@ def prod_phone_mail(email):
         tag="")
     try:
     	message.send()
-	print "email to continue your experience sent"
     except:
-	print "phone email not valid"
+	print "prod_phone_mail has failed"
 
 def id_generator(size=4, chars=string.ascii_uppercase + string.digits):
 	return ''.join(random.choice(chars) for _ in range(size))
