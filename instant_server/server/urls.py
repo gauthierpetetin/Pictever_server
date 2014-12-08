@@ -30,6 +30,10 @@ def login():
     facebook_id = request.form.get('facebook_id')
     facebook_name = request.form.get('facebook_name')
     facebook_birthday = request.form.get('facebook_birthday')
+    if email!="":
+	info=email
+    else:
+	info=facebook_id
     print app_version,facebook_id,facebook_name,facebook_birthday
     try:
 	if facebook_id is None or facebook_id=="":
@@ -79,21 +83,26 @@ def login():
             #wrong password
             abort(401)
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=15,
-            object="{} login ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
-        raise e
+	try:
+            prod_error_instant_mail(
+                error_num=15,
+                object="{} login ".format(e),
+                details="{}{}".format(sys.exc_info(),info),
+                critical_level="ERROR")
+	except:
+	    print "error prod error instantmail"
+	raise e
     except:
         print "Unexpected error:", sys.exc_info()
-        prod_error_instant_mail(
-            error_num=17,
-            object="500 login",
-            details="{}".format(sys.exc_info()),
-            critical_level="CRITICAL")
-        abort(500)
-
+	try:
+            prod_error_instant_mail(
+                error_num=17,
+                object="500 login ",
+                details="{}".format(sys.exc_info()),
+           	critical_level="CRITICAL")
+	except:
+	    print "error prod error instant mail"
+	abort(500)
 
 @app.route('/signup', methods=['POST', 'GET'])
 def sign_up():
@@ -138,9 +147,6 @@ def send_reset_mail():
  	    #email not in db
 	    abort(406)
         return ""
-    except DoesNotExist:
-        #email not in db
-        abort(401)
     except HTTPException as e:
         raise e
     except:
@@ -223,12 +229,15 @@ def define_first_phone_number():
         current_user.save()
         return ""
     except HTTPException as e:
-        print "Unexpected error:", sys.exc_info()
-        prod_error_instant_mail(
-            error_num=15,
-            object="{} define_first_phone_number ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            print "Unexpected error:", sys.exc_info()
+            prod_error_instant_mail(
+                error_num=15,
+                object="{} define_first_phone_number ".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -260,11 +269,14 @@ def send():
             models.Message.add_to_db(current_user, message, receiver_id,delivery_time_ts,receive_label,receive_color, photo_id,video_id,sound_id)
         return ""
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=11,
-            object="{} send".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=11,
+                object="{} send".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -283,11 +295,14 @@ def resend():
 	models.Message.resend(message_id)
         return ""
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=11,
-            object="{} resend ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=11,
+                object="{} resend ".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -309,11 +324,14 @@ def receive_all():
         messages = current_user.get_messages_since(timestamp, now)
         return json.dumps({"ts": now, "new_messages": messages})
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=9,
-            object="{} receive_all".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=9,
+                object="{} receive_all".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -331,11 +349,14 @@ def get_number_of_future_messages():
         counter = current_user.get_number_of_future_messages()
         return str(counter)
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=20,
-            object="{} get_number_of_future_messages ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+	    prod_error_instant_mail(
+                error_num=20,
+                object="{} get_number_of_future_messages ".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -355,11 +376,14 @@ def get_my_status():
         current_user.save()
         return status
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=22,
-            object="{} get_my_status ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=22,
+                object="{} get_my_status ".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -378,11 +402,14 @@ def get_send_choices():
         choices = models.SendChoice.get_active_choices()
         return json.dumps(choices)
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=7,
-            object="{} get_send_choices ".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=7,
+                object="{} get_send_choices ".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         print "Unexpected error:", sys.exc_info()
@@ -438,11 +465,14 @@ def upload_contacts():
                 response.append(contact_info)
         return json.dumps(response) 
     except HTTPException as e:
-        prod_error_instant_mail(
-            error_num=3,
-            object="{} upload contact".format(e),
-            details="{}".format(sys.exc_info()),
-            critical_level="ERROR")
+	try:
+            prod_error_instant_mail(
+                error_num=3,
+                object="{} upload contact".format(e),
+                details="{}".format(sys.exc_info()),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
         raise e
     except:
         prod_error_instant_mail(

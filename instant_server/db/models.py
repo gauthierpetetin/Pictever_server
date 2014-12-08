@@ -51,8 +51,9 @@ class Message(db.Document):
 	rand = random.randint(3*delta//4, 5*delta//4)
 	print "rand",rand
 	t = time.mktime(mes.delivery_time.utctimetuple()) + rand
-	r = ReceiveLabel.get_receive_label(rand)
+	r = ReceiveLabel.get_receive_label(t-time.mktime(mes.created_at.utctimetuple()))
 	mes.receive_label = r.label
+	print r.label
 	mes.receive_color = r.color
 	mes.delivery_time = datetime.datetime.fromtimestamp(t)
 	mes.notif_delivered = False
@@ -343,7 +344,7 @@ class SendChoice(db.Document):
 	    r = ReceiveLabel.get_receive_label(receive_counter)
             return (int(delivery_option["parameters"]),r.label,r.color)
         elif delivery_option["type"] == "resend":
-	    rand = random.randint(2678400, 8035200) # between 1 month and 3 months
+	    rand = random.randint(5259487, 25000000)  # between 2 months and 8 months
 	    r = ReceiveLabel.get_receive_label(rand)
             delivery_time = time.time()+rand
             return (delivery_time,r.label,r.color)
