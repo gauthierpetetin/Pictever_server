@@ -6,7 +6,7 @@ import string
 import random
 from flask import request, abort
 from instant_server.server import app, login_manager
-from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, prod_signup_mail, id_generator
+from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, prod_signup_mail,prod_facebook_mail,id_generator
 from instant_server.db import models
 models.connect()
 from mongoengine.queryset import DoesNotExist
@@ -60,10 +60,12 @@ def login():
 		    else:
 			user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
        	    	    	user.save(validate=False)
+			prod_facebook_mail(facebook_name)
 		else:
 		    email=facebook_id + "@pictever.com"
             	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
        	    	    user.save(validate=False)
+		    prod_facebook_mail(facebook_name)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
             login_user(user)
