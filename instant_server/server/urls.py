@@ -57,6 +57,9 @@ def login():
 		    	user.facebook_name=facebook_name
 		    	user.facebook_birthday=facebook_birthday
 		    	user.save()
+		    else:
+			user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
+       	    	    	user.save(validate=False)
 		else:
 		    email=facebook_id + "@pictever.com"
             	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
