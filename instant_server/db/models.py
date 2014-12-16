@@ -11,7 +11,7 @@ import time
 
 def connect(read_only=False):
     if read_only:
-        READONLY_URI = 'mongodb://readdb:passittothenextlevel@ds051160.mongolab.com:51160/heroku_app31307485'
+        READONLY_URI = 'mongodb://readit:thisisyourfrench@ds051160.mongolab.com:51160/heroku_app31307485'
         print "connecting to pictever database (read only)..."
         db.connect('picteverdb', host=READONLY_URI)
     else:
