@@ -1,3 +1,4 @@
+# -*-coding:Utf-8 -*
 import json
 import sys
 import time
@@ -12,7 +13,6 @@ models.connect()
 from mongoengine.queryset import DoesNotExist
 from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import HTTPException
-
 
 @login_manager.user_loader
 def load_user(userid):

@@ -1,3 +1,4 @@
+# -*-coding:Utf-8 -*
 from notif_server import notif
 from threading import Thread
 import sys
