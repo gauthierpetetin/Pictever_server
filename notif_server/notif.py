@@ -1,3 +1,4 @@
+# -*-coding:Utf-8 -*
 from gcm import GCM
 import os
 import sys

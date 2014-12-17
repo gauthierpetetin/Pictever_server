@@ -1,3 +1,4 @@
+# -*-coding:Utf-8 -*
 import os
 import string
 import random
