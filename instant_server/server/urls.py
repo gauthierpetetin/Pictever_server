@@ -34,7 +34,7 @@ def login():
 	info=email
     else:
 	info=facebook_id
-    print app_version,facebook_id,facebook_name,facebook_birthday
+    #print app_version,facebook_id,facebook_name,facebook_birthday
     try:
 	if facebook_id is None or facebook_id=="":
 	    if email!="":
