@@ -58,8 +58,7 @@ class Message(db.Document):
 	mes.delivery_time = datetime.datetime.fromtimestamp(t)
 	mes.notif_delivered = False
 	mes.save()
-	return mes.id
-	
+	return mes.id	
 
     @staticmethod
     def add_to_db(current_user, message, receiver_id,delivery_time_ts,receive_label,receive_color,photo_id,video_id,sound_id):
@@ -180,7 +179,11 @@ class User(db.Document):
 		else:
 		    print "send now not counted"
 	    status = Status.get_current_status(counter)
-	    return status
+	    current_user_status = Status.objects(label=self.status).first()
+	    if status.inf > current_user_status.inf:
+	    	return status.label
+	    else:
+		return current_user_status.label
 
     def set_reg_id_os_and_version(self, os, reg_id,app_version):
         """ set the reg id of the first phone number ... """
@@ -259,14 +262,14 @@ class User(db.Document):
         if num is None:
             num = PlatformInstance.objects.with_id(self.platform_instance)
         infos["phoneNumber1"] = num.phone_num
-        infos["email"] = self.email
-	facebook_id=""
-	facebook_name=""
-	if self.facebook_id is not None : 
-	    facebook_id=self.facebook_id
-	    facebook_name=self.facebook_name
-	infos["facebook_id"] = facebook_id
-	infos["facebook_name"] = facebook_name
+        infos["email"] = ""
+	#facebook_id=""
+	#facebook_name=""
+	#if self.facebook_id is not None : 
+	#    facebook_id=self.facebook_id
+	#    facebook_name=self.facebook_name
+	infos["facebook_id"] = ""
+	infos["facebook_name"] = ""
 	infos["status"] = self.status
         infos["user_id"] = str(self.id)
         return infos
@@ -290,10 +293,10 @@ class Status(db.Document):
     @staticmethod
     def get_current_status(my_counter):
 	print str(my_counter)
-	current_status="Newbie"
+	current_status=Status.objects(label="Newbie").first()
         for status in Status.objects(active=True):
             if my_counter >= status.inf and my_counter <= status.sup :
-                current_status = status.label
+                current_status = status
         return current_status
 
 class ReceiveLabel(db.Document):
