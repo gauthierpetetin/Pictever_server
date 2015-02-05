@@ -473,8 +473,8 @@ def upload_contacts():
             if plat is not None:
                 contact_info=plat.get_contact_infos(num)
             #contact_info = models.User.get_contact_from_num(num)
-            if contact_info is not None:
-                response.append(contact_info)
+                if contact_info is not None:
+                    response.append(contact_info)
         return json.dumps(response) 
     except HTTPException as e:
 	try:
