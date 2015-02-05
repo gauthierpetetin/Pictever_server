@@ -379,6 +379,10 @@ def get_my_status():
         status = current_user.get_my_status()
 	current_user.status = status
         current_user.save()
+        plat = current_user.get_platform_instance()
+        if plat is not None:
+            plat.status = status
+            plat.save()
         return status
     except HTTPException as e:
 	try:
@@ -465,7 +469,8 @@ def upload_contacts():
         list_of_numbers = json.loads(contact_json)
         response = []
         for num in list_of_numbers:
-            contact_info = models.User.get_contact_from_num(num)
+            contact_info = models.PlatformInstance.get_contact_infos(num)
+            #contact_info = models.User.get_contact_from_num(num)
             if contact_info is not None:
                 response.append(contact_info)
         return json.dumps(response) 
