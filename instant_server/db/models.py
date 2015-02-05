@@ -114,6 +114,7 @@ class PlatformInstance(db.Document):
     app_version = db.StringField(default=None)
     reg_id = db.StringField(max_length=255, default=None)
     user_id = db.ObjectIdField(required=True)
+    status = db.StringField(default="Newbie")
 
 class Bottle(db.Document):
 #    """ store a phone and a Message id corresponding to a message that was 
