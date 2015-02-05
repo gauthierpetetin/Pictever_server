@@ -116,6 +116,19 @@ class PlatformInstance(db.Document):
     user_id = db.ObjectIdField(required=True)
     status = db.StringField(default="Newbie")
 
+    def get_contact_infos(self,num) :
+        try:
+            infos = {}
+            infos["phoneNumber1"] = num
+            infos["email"] = ""
+            infos["facebook_id"] = ""
+            infos["facebook_name"] = ""
+            infos["status"] = self.status
+            infos["user_id"] = str(self.user_id)
+            return infos
+        except:
+            return None
+
 class Bottle(db.Document):
 #    """ store a phone and a Message id corresponding to a message that was 
 #    sent to someone without the app at the time"""
