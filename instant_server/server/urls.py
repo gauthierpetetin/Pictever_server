@@ -469,7 +469,9 @@ def upload_contacts():
         list_of_numbers = json.loads(contact_json)
         response = []
         for num in list_of_numbers:
-            contact_info = models.PlatformInstance.get_contact_infos(num)
+            plat = models.PlatformInstance.objects(phone_num=num).order_by('-id').first()
+            if plat is not None:
+                contact_info=plat.get_contact_infos(num)
             #contact_info = models.User.get_contact_from_num(num)
             if contact_info is not None:
                 response.append(contact_info)

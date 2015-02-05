@@ -116,16 +116,15 @@ class PlatformInstance(db.Document):
     user_id = db.ObjectIdField(required=True)
     status = db.StringField(default="Newbie")
 
-    def get_contact_infos(num) :
+    def get_contact_infos(self,num) :
         try:
-            plat = PlatformInstance.objects(phone_num=num).order_by('-id').first()
             infos = {}
             infos["phoneNumber1"] = num
             infos["email"] = ""
             infos["facebook_id"] = ""
             infos["facebook_name"] = ""
-            infos["status"] = plat.status
-            infos["user_id"] = str(plat.user_id)
+            infos["status"] = self.status
+            infos["user_id"] = str(self.user_id)
             return infos
         except:
             return None
