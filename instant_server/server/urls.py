@@ -471,18 +471,24 @@ def block_contacts():
 def upload_address_book():
     contact_json = request.form['address_book']
     try:
-	print "avant"
-	#list_contacts = json.loads(contact_json)
         address_book = models.AddressBook.objects(user_id=current_user.id).first()
 	if address_book is None:
-	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json)
-	    address_book.save()
+    	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json)
+    	    address_book.save()
 	else:
-	    address_book.all_contacts = contact_json
-	print "après"	
-	#result = q.enqueue(test_background_job, 'gogoasticot')
-	#print result
-        return "" #json.dumps(address_book.on_pictever) 
+    	    address_book.all_contacts = contact_json
+    	    address_book.save()
+	#background job start
+	list_contacts = json.loads(address_book.all_contacts)
+	on_pictever=[]
+	for c in list_contacts:
+    	    plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
+    	    if plat is not None:
+            c['status']=plat.status
+            on_pictever.append(c)
+	address_book.on_pictever=json.dumps(on_pictever)
+	address_book.save()
+	return json.dumps(on_pictever)
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
