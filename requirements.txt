@@ -14,7 +14,6 @@ Pillow==2.3.0
 SQLAlchemy==0.9.8
 WTForms==2.0.1
 Werkzeug==0.9.6
-adium-theme-ubuntu==0.3.4
 apns==1.1.2
 apt-xapian-index==0.45
 argparse==1.2.1
