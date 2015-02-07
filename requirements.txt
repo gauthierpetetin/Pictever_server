@@ -15,7 +15,6 @@ SQLAlchemy==0.9.8
 WTForms==2.0.1
 Werkzeug==0.9.6
 apns==1.1.2
-apt-xapian-index==0.45
 argparse==1.2.1
 awscli==1.5.6
 bcdoc==0.12.2
