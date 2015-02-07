@@ -33,6 +33,7 @@ def test_background_job(address_book):
             on_pictever.append(infos)
     address_book.on_pictever=json.dumps(on_pictever)
     address_book.save()
+    print "background job done"
     return on_pictever
 
 @login_manager.user_loader
