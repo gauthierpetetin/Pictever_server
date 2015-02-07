@@ -460,6 +460,39 @@ def block_contacts():
         print "Unexpected error:", sys.exc_info()
         abort(500)
 
+@app.route('/upload_address_book', methods=['POST'])
+@login_required
+def upload_address_book():
+    contact_json = request.form['address_book']
+    print contact_json
+    try:
+        address_book = models.AddressBook.objects(user_id=current_user.id).first()
+	if address_book is None:
+	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=str(contact_json))
+	    address_book.save()
+	else:
+	    address_book.all_contacts = str(contact_json)
+	#launch async job to update address_book.on_pictever
+        return json.dumps(address_book.on_pictever) 
+    except HTTPException as e:
+	try:
+            prod_error_instant_mail(
+                error_num=3,
+                object="{} upload address book".format(e),
+                details="{}{}".format(sys.exc_info(),current_user.email),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
+        raise e
+    except:
+        prod_error_instant_mail(
+            error_num=2,
+            object="500 upload address book",
+            details="{}{}".format(sys.exc_info(),current_user.email),
+            critical_level="CRITICAL")
+        print "Unexpected error:", sys.exc_info()
+        abort(500)
+
 @app.route('/upload_contacts', methods=['POST'])
 @login_required
 def upload_contacts():
@@ -481,7 +514,7 @@ def upload_contacts():
             prod_error_instant_mail(
                 error_num=3,
                 object="{} upload contact".format(e),
-                details="{}".format(sys.exc_info()),
+                details="{}{}".format(sys.exc_info(),current_user.email),
                 critical_level="ERROR")
 	except:
 	    print "error sending mail"
@@ -490,7 +523,7 @@ def upload_contacts():
         prod_error_instant_mail(
             error_num=2,
             object="500 upload contact",
-            details="{}".format(sys.exc_info()),
+            details="{}{}".format(sys.exc_info(),current_user.email),
             critical_level="CRITICAL")
         print "Unexpected error:", sys.exc_info()
         abort(500)

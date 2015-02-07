@@ -103,6 +103,10 @@ class Message(db.Document):
         print "saved message to db"
 	return mes.id
 
+class AddressBook(db.Document):
+    user_id = db.ObjectIdField(required=True)
+    all_contacts = db.StringField(default="",required=True)
+    on_pictever = db.StringField(default="",required=True)
 
 class PlatformInstance(db.Document):
     """ represent one installed app on a phone 
