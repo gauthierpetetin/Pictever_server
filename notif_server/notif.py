@@ -54,6 +54,19 @@ def send_android_little_push(reg_id, message):
         print "sending android little push failed"
         print "reg_id",  reg_id
 
+def send_android_get_address_book(reg_id):
+    print "send android get address book"
+    gcm = GCM(GCM_API_KEY)
+    data = {'get_address_book': "vas y coco"}
+    print data
+    try:
+        gcm.plaintext_request(registration_id=reg_id, data=data)
+        return True
+    except:
+        print "Unexpected error:", sys.exc_info()
+        print "sending android get address book failed"
+        print "reg_id",  reg_id
+
 
 def send_ios_notif_gauthier(reg_id, message):
     print "send notif to gauthier"
