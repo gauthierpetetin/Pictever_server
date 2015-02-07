@@ -2,14 +2,15 @@
 from notif_server import notif
 from threading import Thread
 import sys
+import json
 from instant_server.db import models
 models.connect()
 from instant_server.server.error_handler import prod_error_notif_mail
-from datetime import datetime,timedelta
 import time
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
+	print "address_book_to_check",str(a.user_id)
 	list_contacts = json.loads(a.all_contacts)
     	on_pictever=[]
     	for c in list_contacts:
@@ -28,14 +29,14 @@ def who_is_on_pictever():
     	a.save()
 	plat = models.PlatformInstance.objects(user_id=a.user_id).order_by('-id').first()
 	if plat is not None:
-	    if plat.os='android' and plat.reg_id is not None:
+	    if plat.os=='android' and plat.reg_id is not None:
 	    	notif.send_android_get_address_book(plat.reg_id)
 
 def contact_check_loop():
-    print " notification start"
+    print "[]"
     try:
-	print "[]"
 	who_is_on_pictever()
+	time.sleep(1)
 	contact_check_loop()
     except:
 	prod_error_notif_mail(
