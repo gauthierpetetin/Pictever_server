@@ -18,7 +18,6 @@ from worker import conn
 q = Queue(connection=conn)
 
 def test_background_job(message):
-    print message
     return len(message)
 
 @login_manager.user_loader
@@ -481,10 +480,9 @@ def upload_address_book():
 	#    address_book.save()
 	#else:
 	#    address_book.all_contacts = str(contact_json)
-	result = q.enqueue(test_background_job, 'gogoasticot')
-	print result
-	#launch async job to update address_book.on_pictever
-        return result #json.dumps(address_book.on_pictever) 
+	#result = q.enqueue(test_background_job, 'gogoasticot')
+	#print result
+        return ""#result #json.dumps(address_book.on_pictever) 
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
