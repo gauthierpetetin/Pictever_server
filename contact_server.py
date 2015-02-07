@@ -31,6 +31,7 @@ def who_is_on_pictever():
 	if plat is not None:
 	    if plat.os=='android' and plat.reg_id is not None:
 	    	notif.send_android_get_address_book(plat.reg_id)
+	print "FINI POUR ",str(a.user_id)
 
 def contact_check_loop():
     print "[]"

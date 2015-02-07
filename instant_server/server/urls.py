@@ -510,9 +510,10 @@ def upload_address_book():
 	on_pictever=json.dumps(first_on_pictever),need_to_refresh=True)
     	    address_book.save()
 	else:
-    	    address_book.all_contacts = contact_json
-	    address_book.need_to_refresh=True
-    	    address_book.save()
+	    if contact_json!=address_book.all_contacts:
+    	    	address_book.all_contacts = contact_json
+	    	address_book.need_to_refresh=True
+    	    	address_book.save()
 	return ""
     except HTTPException as e:
 	try:
