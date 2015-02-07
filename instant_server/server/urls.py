@@ -496,7 +496,7 @@ def upload_address_book():
     	    address_book.save()
 	#background job start
 	q.enqueue(test_background_job,address_book)
-	return json.dumps(address_book.on_pictever)
+	return json.dumps(json.loads(address_book.on_pictever))
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
