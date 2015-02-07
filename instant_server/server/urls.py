@@ -460,6 +460,72 @@ def block_contacts():
         print "Unexpected error:", sys.exc_info()
         abort(500)
 
+@app.route('/get_address_book', methods=['GET'])
+@login_required
+def get_address_book():
+    try:
+        address_book = models.AddressBook.objects(user_id=current_user.id).first()
+	if address_book is not None : 
+            return json.dumps(json.loads(address_book.on_pictever))
+	else:
+	    return ""
+    except HTTPException as e:
+	try:
+            prod_error_instant_mail(
+                error_num=7,
+                object="{} get_address_book".format(e),
+                details="{}{}".format(sys.exc_info(),current_user.email),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
+        raise e
+    except:
+        print "Unexpected error:", sys.exc_info()
+        prod_error_instant_mail(
+            error_num=6,
+            object="500 get address book",
+            details="{}{}".format(sys.exc_info(),current_user.email),
+            critical_level="CRITICAL")
+        abort(500)
+
+@app.route('/upload_address_book',methods=['POST'])
+@login_required
+def upload_address_book():
+    contact_json = request.form['address_book']
+    try:
+        address_book = models.AddressBook.objects(user_id=current_user.id).first()
+	if address_book is None:
+	    plat = current_user.get_platform_instance()
+	    on_pictever={}
+	    if plat is not None:
+	    	on_pictever['phoneNumber1']=plat.phone_num
+		on_pictever['status']=plat.status
+		on_pictever['user_id']=str(current_user.id)
+    	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json,on_pictever=json_dumps(on_pictever))
+    	    address_book.save()
+	else:
+    	    address_book.all_contacts = contact_json
+    	    address_book.save()
+	return ""
+    except HTTPException as e:
+	try:
+            prod_error_instant_mail(
+                error_num=3,
+                object="{} upload address book".format(e),
+                details="{}{}".format(sys.exc_info(),current_user.email),
+                critical_level="ERROR")
+	except:
+	    print "error sending mail"
+        raise e
+    except:
+        prod_error_instant_mail(
+            error_num=2,
+            object="500 upload address book",
+            details="{}{}".format(sys.exc_info(),current_user.email),
+            critical_level="CRITICAL")
+        print "Unexpected error:", sys.exc_info()
+        abort(500)
+
 @app.route('/upload_contacts', methods=['POST'])
 @login_required
 def upload_contacts():
