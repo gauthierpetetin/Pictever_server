@@ -15,6 +15,7 @@ from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import HTTPException
 from rq import Queue
 from worker import conn
+q = Queue(connection=conn)
 
 def test_background_job(message):
     print message
@@ -471,17 +472,17 @@ def block_contacts():
 def upload_address_book():
     contact_json = request.form['address_book']
     try:
-        address_book = models.AddressBook.objects(user_id=current_user.id).first()
-	if address_book is None:
-	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=str(contact_json))
-	    address_book.save()
-	else:
-	    address_book.all_contacts = str(contact_json)
-	q = Queue(connection=conn)
+	list_contacts = json.loads(contact_json)	
+        #address_book = models.AddressBook.objects(user_id=current_user.id).first()
+	#if address_book is None:
+	#    address_book = models.AddressBook(user_id=current_user.id,all_contacts=str(contact_json))
+	#    address_book.save()
+	#else:
+	#    address_book.all_contacts = str(contact_json)
 	result = q.enqueue(test_background_job, 'gogoasticot')
 	print result
 	#launch async job to update address_book.on_pictever
-        return json.dumps(address_book.on_pictever) 
+        return result #json.dumps(address_book.on_pictever) 
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
