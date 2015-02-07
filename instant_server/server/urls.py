@@ -17,8 +17,23 @@ from rq import Queue
 from worker import conn
 q = Queue(connection=conn)
 
-def test_background_job(message):
-    return len(message)
+def test_background_job(address_book):
+    list_contacts = json.loads(address_book.all_contacts)
+    on_pictever=[]
+    for c in list_contacts:
+	plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
+	if plat is not None:
+            infos = {}
+            infos["phoneNumber1"] = c.get("tel")
+            infos["email"] = ""
+            infos["facebook_id"] = ""
+            infos["facebook_name"] = ""
+            infos["status"] = plat.status
+            infos["user_id"] = str(plat.user_id)
+            on_pictever.append(infos)
+	address_book.on_pictever=json.dumps(on_pictever)
+	address_book.save()
+    return on_pictever
 
 @login_manager.user_loader
 def load_user(userid):
@@ -479,22 +494,8 @@ def upload_address_book():
     	    address_book.all_contacts = contact_json
     	    address_book.save()
 	#background job start
-	list_contacts = json.loads(address_book.all_contacts)
-	on_pictever=[]
-	for c in list_contacts:
-    	    plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
-    	    if plat is not None:
-            	infos = {}
-            	infos["phoneNumber1"] = c.get("tel")
-            	infos["email"] = ""
-            	infos["facebook_id"] = ""
-            	infos["facebook_name"] = ""
-            	infos["status"] = plat.status
-            	infos["user_id"] = str(plat.user_id)
-            	on_pictever.append(infos)
-	address_book.on_pictever=json.dumps(on_pictever)
-	address_book.save()
-	return json.dumps(on_pictever)
+	response = test_background_job(address_book)
+	return json.dumps(response)
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
