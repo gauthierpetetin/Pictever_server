@@ -5,6 +5,8 @@ import time
 import datetime
 import string
 import random
+from rq import Queue
+from worker import conn
 from flask import request, abort
 from instant_server.server import app, login_manager
 from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, prod_signup_mail,prod_facebook_mail,id_generator
@@ -13,6 +15,11 @@ models.connect()
 from mongoengine.queryset import DoesNotExist
 from flask_login import login_required, current_user, login_user
 from werkzeug.exceptions import HTTPException
+q = Queue(connection=conn)
+
+def test_background_job(message):
+    print message
+    return len(message)
 
 @login_manager.user_loader
 def load_user(userid):
@@ -471,6 +478,8 @@ def upload_address_book():
 	    address_book.save()
 	else:
 	    address_book.all_contacts = str(contact_json)
+	result = q.enqueue(test_background_job, 'gogoasticot')
+	print result
 	#launch async job to update address_book.on_pictever
         return json.dumps(address_book.on_pictever) 
     except HTTPException as e:
