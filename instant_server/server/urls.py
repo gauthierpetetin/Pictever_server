@@ -472,7 +472,9 @@ def block_contacts():
 def upload_address_book():
     contact_json = request.form['address_book']
     try:
-	list_contacts = json.loads(contact_json)	
+	print "avant"
+	list_contacts = json.loads(contact_json)
+	print "après"	
         #address_book = models.AddressBook.objects(user_id=current_user.id).first()
 	#if address_book is None:
 	#    address_book = models.AddressBook(user_id=current_user.id,all_contacts=str(contact_json))
