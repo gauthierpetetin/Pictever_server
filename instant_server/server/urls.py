@@ -494,7 +494,7 @@ def upload_address_book():
     	    address_book.all_contacts = contact_json
     	    address_book.save()
 	#background job start
-	response = test_background_job(address_book)
+	response = q.enqueue(test_background_job,address_book)
 	return json.dumps(response)
     except HTTPException as e:
 	try:
