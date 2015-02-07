@@ -31,8 +31,8 @@ def test_background_job(address_book):
             infos["status"] = plat.status
             infos["user_id"] = str(plat.user_id)
             on_pictever.append(infos)
-	address_book.on_pictever=json.dumps(on_pictever)
-	address_book.save()
+    address_book.on_pictever=json.dumps(on_pictever)
+    address_book.save()
     return on_pictever
 
 @login_manager.user_loader
@@ -494,8 +494,8 @@ def upload_address_book():
     	    address_book.all_contacts = contact_json
     	    address_book.save()
 	#background job start
-	response = q.enqueue(test_background_job,address_book)
-	return json.dumps(response)
+	q.enqueue(test_background_job,address_book)
+	return json.dumps(address_book.on_pictever)
     except HTTPException as e:
 	try:
             prod_error_instant_mail(
