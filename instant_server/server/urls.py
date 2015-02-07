@@ -466,7 +466,7 @@ def get_address_book():
     try:
         address_book = models.AddressBook.objects(user_id=current_user.id).first()
 	if address_book is not None : 
-            return json.dumps(json.loads(address_book.on_pictever))
+            return address_book.on_pictever
 	else:
 	    return ""
     except HTTPException as e:
@@ -496,16 +496,24 @@ def upload_address_book():
         address_book = models.AddressBook.objects(user_id=current_user.id).first()
 	if address_book is None:
 	    plat = current_user.get_platform_instance()
-	    on_pictever={}
+	    first_on_pictever=[]
+	    json_pictever={}
 	    if plat is not None:
-	    	on_pictever['phoneNumber1']=plat.phone_num
-		on_pictever['status']=plat.status
-		on_pictever['user_id']=str(current_user.id)
-    	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json,on_pictever=json_dumps(on_pictever))
+	    	json_pictever['phoneNumber1']=plat.phone_num
+		json_pictever['status']=plat.status
+		json_pictever['user_id']=str(current_user.id)
+		json_pictever["email"] = ""
+            	json_pictever["facebook_id"] = ""
+            	json_pictever["facebook_name"] = ""
+	    first_on_pictever.append(json_pictever)
+    	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json,
+	on_pictever=json.dumps(first_on_pictever),need_to_refresh=True)
     	    address_book.save()
 	else:
-    	    address_book.all_contacts = contact_json
-    	    address_book.save()
+	    if contact_json!=address_book.all_contacts:
+    	    	address_book.all_contacts = contact_json
+	    	address_book.need_to_refresh=True
+    	    	address_book.save()
 	return ""
     except HTTPException as e:
 	try:
