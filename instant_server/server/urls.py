@@ -484,8 +484,8 @@ def upload_address_book():
 	for c in list_contacts:
     	    plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
     	    if plat is not None:
-            c['status']=plat.status
-            on_pictever.append(c)
+            	c['status']=plat.status
+            	on_pictever.append(c)
 	address_book.on_pictever=json.dumps(on_pictever)
 	address_book.save()
 	return json.dumps(on_pictever)
