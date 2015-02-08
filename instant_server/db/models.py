@@ -154,6 +154,7 @@ class User(db.Document):
     facebook_id = db.StringField(default=None) 
     facebook_name = db.StringField(default=None)
     facebook_birthday = db.StringField(default=None)
+    country_code = db.StringField(default='us')
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
@@ -333,12 +334,25 @@ class ReceiveLabel(db.Document):
         for r in ReceiveLabel.objects(active=True):
             if counter >= r.inf and counter <= r.sup :
        		 return r
+	return_label.color=get_rand_color()
         return return_label
+
+    def get_rand_color():
+	rand = random.randint(1,4)
+	if rand==1:
+	    return "ffdc1a" #jaune
+	if rand==2:
+	    return "f6591e" #orange
+	if rand==3:
+	    return "6bb690" #vert
+	if rand==4:
+	    return "f36f4d" #rouge
 
 class SendChoice(db.Document):
     active = db.BooleanField(default=False)
     order_id = db.IntField(required=True)
     send_label = db.StringField(default="", required=True)
+    send_label_fr = db.StringField(default="", required=True)
     receive_label = db.StringField(default="", required=True)
     receive_color = db.StringField(default="", required=True)
     key = db.StringField(required=False)
@@ -349,15 +363,22 @@ class SendChoice(db.Document):
     time_delay = db.IntField(required=False)
 
     @staticmethod
-    def get_active_choices():
+    def get_active_choices(country_code):
         choices = []
-        for choice in SendChoice.objects(active=True):
-            d = {}
-            d["order_id"] = str(choice.order_id)
-            d["key"] = str(choice.id)
-            d["send_label"] = choice.send_label
-            #d["receive_label"] = choice.receive_label
-            choices.append(d)
+	if country_code=='fr' or country_code=='be' or country_code=='ch' :
+            for choice in SendChoice.objects(active=True):
+                d = {}
+            	d["order_id"] = str(choice.order_id)
+            	d["key"] = str(choice.id)
+           	d["send_label"] = choice.send_label_fr
+           	choices.append(d)
+	else:
+	    for choice in SendChoice.objects(active=True):
+                d = {}
+            	d["order_id"] = str(choice.order_id)
+            	d["key"] = str(choice.id)
+           	d["send_label"] = choice.send_label
+           	choices.append(d)
         return choices
 
     @staticmethod

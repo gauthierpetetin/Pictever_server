@@ -27,6 +27,7 @@ def login():
     os = request.form['os']
     reg_id = request.form['reg_id']
     app_version = request.form.get('app_version')
+    country_code = request.form.get('country_code')
     facebook_id = request.form.get('facebook_id')
     facebook_name = request.form.get('facebook_name')
     facebook_birthday = request.form.get('facebook_birthday')
@@ -34,6 +35,10 @@ def login():
 	info=email
     else:
 	info=facebook_id
+    if country_code is None :
+	country_code = 'us'
+    else:
+	country_code = country_code.lower()
     try:
 	#print app_version,facebook_id,facebook_name,facebook_birthday
 	if facebook_id is None or facebook_id=="":
@@ -58,16 +63,18 @@ def login():
 		    	user.facebook_birthday=facebook_birthday
 		    	user.save()
 		    else:
-			user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
-       	    	    	user.save(validate=False)
-			prod_facebook_mail(facebook_name)
+			user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
+       	    	    	user.save()
+			prod_facebook_mail(email,facebook_name,country_code)
 		else:
 		    email=facebook_id + "@pictever.com"
-            	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
-       	    	    user.save(validate=False)
-		    prod_facebook_mail(facebook_name)
+            	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
+       	    	    user.save()
+		    prod_facebook_mail(email,facebook_name,country_code)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
+	    user.country_code=country_code
+	    user.save()
             login_user(user)
             return json.dumps({
                 "user_id": str(user.id),
@@ -113,14 +120,19 @@ def login():
 def sign_up():
     email = request.form['email']
     password_hash = request.form['password']
+    country_code = request.form['country_code']
+    if country_code is None :
+	country_code = 'us'
+    else:
+	country_code = country_code.lower()
     if models.User.objects(email=email).count() > 0:
         print models.User.objects(email=email).count()
         abort(406)
     try:
-        new_user = models.User(email=email,password_hash=password_hash,created_at=datetime.datetime.now)
-        new_user.save(validate=False)
+        new_user = models.User(email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code)
+        new_user.save()
 	if "@" in email:
-	    prod_signup_mail(email.replace(" ",""))
+	    prod_signup_mail(email.replace(" ",""),country_code)
         return ""
     except HTTPException as e:
         raise e
@@ -408,7 +420,7 @@ def get_my_status():
 @login_required
 def get_send_choices():
     try:
-        choices = models.SendChoice.get_active_choices()
+	choices = models.SendChoice.get_active_choices(current_user.country_code)
         return json.dumps(choices)
     except HTTPException as e:
 	try:

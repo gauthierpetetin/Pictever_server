@@ -74,7 +74,7 @@ def check_new_contacts_in_address_books():
 				            message=cont.get('name')
 					    print message
 			            if message!="":
-				        if "0033" in plat.phone_num :
+				        if plat.phone_num.starts_with("0033"):
 			    	            message+=" a rejoint Pictever!"
 				        else:
 				            message+=" joined Pictever!"
@@ -90,7 +90,7 @@ def check_new_contacts_in_address_books():
                 object="check_new_contacts_in_address_books",
                 details="{}".format(sys.exc_info()),
                 critical_level="CRITICAL")
-	time.sleep(3)
+	time.sleep(21600)
 
 if __name__ == '__main__':
     t1 = Thread(target = contact_check_loop)
