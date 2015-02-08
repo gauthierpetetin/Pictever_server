@@ -80,7 +80,7 @@ def send_ios_notif_gauthier(reg_id, message):
         key_path = os.path.join(os.path.dirname(__file__), path_key)
         my_apns = APNs(use_sandbox=True, cert_file=cert_path, key_file=key_path)
 
-        payload = Payload(alert=message.receive_label, sound="default", badge=1)
+        payload = Payload(alert=message.receive_label, sound="ache.caf", badge=1)
         my_apns.gateway_server.send_notification(reg_id, payload)
         return True
     except:
@@ -102,7 +102,7 @@ def send_ios_notification(reg_id, message):
         
         my_apns = APNs(cert_file=cert_path, key_file=key_path)
 
-        payload = Payload(alert=message.receive_label, sound="default", badge=1)
+        payload = Payload(alert=message.receive_label, sound="ache.caf", badge=1)
         my_apns.gateway_server.send_notification(reg_id, payload)
         return True
     except:
