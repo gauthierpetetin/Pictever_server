@@ -91,14 +91,14 @@ def send_no_phone_mail():
                 if u.get_platform_instance() is None and u.phone_mail_sent==False:
 		    print u.email
 		    if "@" in u.email:
-	    		prod_phone_mail(u.email.replace(" ",""))
+	    		prod_phone_mail(u.email.replace(" ",""),u.country_code)
 		    u.phone_mail_sent=True
 		    u.save()
 	except:
             prod_error_notif_mail(
                 error_num=103,
                 object=" send no phone mail loop",
-                details="{}".format(sys.exc_info()),
+                details="{}{}".format(sys.exc_info(),u.email),
                 critical_level="CRITICAL")
 	time.sleep(60000)
 
