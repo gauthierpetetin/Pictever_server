@@ -12,14 +12,23 @@ bfm=datetime.datetime(2014,2,8,16,00,00,00)
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
-	print "address_book_to_check",str(a.user_id)
-	list_contacts = json.loads(a.all_contacts)
+	a.need_to_refresh=False
+	a.save()
+	ta = Thread(target = update_address_book, args=(str(a.id),))
+	ta.setDaemon(True)
+	ta.start()
+
+def update_address_book(a_id):
+    try:
+   	a = models.AddressBook.objects.with_id(a_id)
+    	print "address_book of ",str(a.user_id), " currenlty checking "
+    	list_contacts = json.loads(a.all_contacts)
     	on_pictever=[]
-    	for c in list_contacts:
+        for c in list_contacts:
 	    plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
 	    if plat is not None:
-                infos = {}
-                infos["phoneNumber1"] = c.get("tel")
+	    	infos = {}
+            	infos["phoneNumber1"] = c.get("tel")
             	infos["email"] = ""
             	infos["facebook_id"] = ""
             	infos["facebook_name"] = ""
@@ -27,13 +36,16 @@ def who_is_on_pictever():
             	infos["user_id"] = str(plat.user_id)
             	on_pictever.append(infos)
     	a.on_pictever=json.dumps(on_pictever)
-	a.need_to_refresh=False
+    	a.need_to_refresh=False
     	a.save()
-	plat = models.PlatformInstance.objects(user_id=a.user_id).order_by('-id').first()
-	if plat is not None:
+    	plat = models.PlatformInstance.objects(user_id=a.user_id).order_by('-id').first()
+        if plat is not None:
 	    if plat.os=='android' and plat.reg_id is not None:
-	    	notif.send_android_get_address_book(plat.reg_id)
-	print "FINI POUR ",str(a.user_id)
+	        notif.send_android_get_address_book(plat.reg_id)
+    	print "END FOR ",str(a.user_id)
+    except:
+	a.need_to_refresh=True
+   	a.save()
 
 def contact_check_loop():
     while True:
