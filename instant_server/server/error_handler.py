@@ -39,7 +39,7 @@ def prod_reset_mail(receiver,details):
     except:
 	print "signup email not valid"
 
-def prod_facebook_mail(facebook_name):
+def prod_facebook_mail(email,facebook_name,country_code):
     try:
  	message = PMMail(
             api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
@@ -49,10 +49,25 @@ def prod_facebook_mail(facebook_name):
             text_body=facebook_name,
             tag="")
     	message.send()
+	file_to_open="welcome_mail.txt"
+	subject = "Welcome on board !"
+	if country_code=='fr' or country_code=='be' or country_code=='ch' :
+	    file_to_open="welcome_mail_fr.txt"
+	    subject = "Bienvenue à bord !"
+        with open (file_to_open, "r") as myfile:
+    	    data=myfile.read()
+        welcome = PMMail(
+            api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
+            subject=subject,
+            sender="team@pictever.com",
+            to=email,
+            text_body=data,
+            tag="")
+    	welcome.send()
     except:
 	print "prod_facebook_mail has failed"
 
-def prod_signup_mail(email):
+def prod_signup_mail(email,country_code):
     try:
         message = PMMail(
             api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
@@ -62,11 +77,16 @@ def prod_signup_mail(email):
             text_body=email,
             tag="")
     	message.send()
-        with open ("welcome_mail.txt", "r") as myfile:
+	file_to_open="welcome_mail.txt"
+	subject = "Welcome on board !"
+	if country_code=='fr' or country_code=='be' or country_code=='ch' :
+	    file_to_open="welcome_mail_fr.txt"
+	    subject = "Bienvenue à bord !"
+        with open (file_to_open, "r") as myfile:
     	    data=myfile.read()
         welcome = PMMail(
             api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
-            subject="Welcome on board !",
+            subject=subject,
             sender="team@pictever.com",
             to=email,
             text_body=data,
@@ -76,13 +96,18 @@ def prod_signup_mail(email):
 	print "prod_signup_mail has failed"
     
 
-def prod_phone_mail(email):
+def prod_phone_mail(email,country_code):
     try:
-        with open ("no_phone.txt", "r") as myfile:
+	file_to_open="no_phone.txt"
+	subject = "Continue you experience on Pictever"
+	if country_code=='fr' or country_code=='be' or country_code=='ch' :
+	    file_to_open="no_phone_fr.txt"
+	    subject = "Continue ton expérience sur Pictever"
+        with open (file_to_open, "r") as myfile:
     	    data=myfile.read()
         message = PMMail(
             api_key="f7bc97f9-ea51-4f15-b9f0-c187c82d466e",
-            subject="Continue you experience on Pictever",
+            subject=subject,
             sender="team@pictever.com",
             to=email,
             text_body=data,

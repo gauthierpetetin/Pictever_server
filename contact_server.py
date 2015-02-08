@@ -74,7 +74,7 @@ def check_new_contacts_in_address_books():
 				            message=cont.get('name')
 					    print message
 			            if message!="":
-				        if "0033" in plat.phone_num :
+				        if plat.phone_num.starts_with("0033"):
 			    	            message+=" a rejoint Pictever!"
 				        else:
 				            message+=" joined Pictever!"
