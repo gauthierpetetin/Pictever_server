@@ -155,6 +155,7 @@ class User(db.Document):
     facebook_name = db.StringField(default=None)
     facebook_birthday = db.StringField(default=None)
     country_code = db.StringField(default='us')
+    last_log_time = db.DateTimeField(default=datetime.datetime.fromtimestamp(1412121600))
 
     def check_bottles(self):
         """ loop over all Bottles to check for messages already pending"""
@@ -365,7 +366,7 @@ class SendChoice(db.Document):
     @staticmethod
     def get_active_choices(country_code):
         choices = []
-	if country_code=='fr' or country_code=='be' or country_code=='ch' :
+	if country_code=='fr':
             for choice in SendChoice.objects(active=True):
                 d = {}
             	d["order_id"] = str(choice.order_id)
