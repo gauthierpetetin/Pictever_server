@@ -61,28 +61,36 @@ def check_new_contacts_in_address_books():
                     for c in json_contacts:
                         plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
                         if plat is not None:
-			    print "il a un contact sur Pictever, qui est : ",str(plat.user_id),plat.phone_num
-			    a_mec = models.AdressBook.objects(user_id=plat.user_id).first()
-			    if c.get("tel") in a_mec.all_contacts:
-				print "et il est dans l address book de ce contact"
-			        message=""
-			        for cont in json.loads(a_mec.all_contacts):
-				    if cont.get('tel')==c.get('tel'):
-				        message=cont.get('name')
-			        if message!="":
-				    if "0033" in plat.phone_num :
-			    	        message.append(" a rejoint Pictever!")
-				    else:
-				        message.append(" joined Pictever!")
-				    print "donc on envoit la notif a ce contact"
-			    	    notif.send_silent_notification(message,plat)
+			    print "user a un contact sur Pictever, qui est : ",str(plat.user_id),plat.phone_num
+			    if str(plat.user_id)!=str(u.id):
+			        a_mec = models.AddressBook.objects(user_id=plat.user_id).first()
+			        if a_mec is not None and u.get_platform_instance().phone_num in a_mec.all_contacts:
+				    print "et user est dans l address book de ce contact"
+			            message=""
+			            for cont in json.loads(a_mec.all_contacts):
+					print "comparing ",u.get_platform_instance().phone_num,' to ',cont.get('tel')
+				        if cont.get('tel')==u.get_platform_instance().phone_num:
+					    print "YES on a trouve 1011"
+				            message=cont.get('name')
+					    print message
+			            if message!="":
+				        if "0033" in plat.phone_num :
+			    	            message+=" a rejoint Pictever!"
+				        else:
+				            message+=" joined Pictever!"
+				        print "donc on envoit la notif a ce contact"
+			    	        notif.send_silent_notification(message,plat)
+			        else:
+				    print "mais il n'a pas d addresse book ou user n est pas dans l address book de ce contact"
+		a.is_new=False
+		a.save()
 	except:
             prod_error_notif_mail(
                 error_num=303,
                 object="check_new_contacts_in_address_books",
                 details="{}".format(sys.exc_info()),
                 critical_level="CRITICAL")
-	time.sleep(21600)
+	time.sleep(3)
 
 if __name__ == '__main__':
     t1 = Thread(target = contact_check_loop)
