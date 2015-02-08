@@ -507,7 +507,7 @@ def upload_address_book():
             	json_pictever["facebook_name"] = ""
 	    first_on_pictever.append(json_pictever)
     	    address_book = models.AddressBook(user_id=current_user.id,all_contacts=contact_json,
-	on_pictever=json.dumps(first_on_pictever),need_to_refresh=True)
+	on_pictever=json.dumps(first_on_pictever),need_to_refresh=True,is_new=True)
     	    address_book.save()
 	else:
 	    if contact_json!=address_book.all_contacts:
