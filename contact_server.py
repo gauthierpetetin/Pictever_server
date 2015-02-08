@@ -39,14 +39,15 @@ def contact_check_loop():
     print "[]"
     try:
 	who_is_on_pictever()
-	time.sleep(1)
-	contact_check_loop()
     except:
+	print sys.exc_info()
 	prod_error_notif_mail(
 	     error_num=203,
 	     object=" main contact loop",
 	     details="{}".format(sys.exc_info()),
 	     critical_level="CRITICAL")
+    time.sleep(1)
+    contact_check_loop()
 
 def check_new_contacts_in_address_books():
     while True:
