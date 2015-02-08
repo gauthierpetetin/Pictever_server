@@ -41,6 +41,21 @@ def send_android_notification(reg_id, message):
         print "sending android notif failed"
         print "reg_id",  reg_id
 
+def send_android_silent(reg_id, message):
+    print "send android silent notif"
+    gcm = GCM(GCM_API_KEY)
+    sender_id = message.sender_id
+    sender = models.User.objects.with_id(sender_id)
+    data = {'silent_push': message}
+    print data
+    try:
+        gcm.plaintext_request(registration_id=reg_id, data=data)
+        return True
+    except:
+        print "Unexpected error:", sys.exc_info()
+        print "sending android notif failed"
+        print "reg_id",  reg_id
+
 def send_android_little_push(reg_id, message):
     print "send android little push"
     gcm = GCM(GCM_API_KEY)
@@ -88,20 +103,36 @@ def send_ios_notif_gauthier(reg_id, message):
         print "sending ios to gauthier notif failed"
         print "reg_id",  reg_id
 
+def send_gauthier_silent(reg_id, message):
+    print "send silent notif to gauthier"
+    try:
+        # APN to use when in developer mode :
+        #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
+        # APN to use when in production mode :
+        path_cert = 'certificates/PicteverCertDev.pem'
+        path_key = 'certificates/PicteverKeyDev.pem'
+        cert_path = os.path.join(os.path.dirname(__file__), path_cert)
+        key_path = os.path.join(os.path.dirname(__file__), path_key)
+        my_apns = APNs(use_sandbox=True, cert_file=cert_path, key_file=key_path)
+        payload = Payload(alert=message)
+        my_apns.gateway_server.send_notification(reg_id, payload)
+        return True
+    except:
+        print "Unexpected error:", sys.exc_info()
+        print "sending ios to gauthier notif failed"
+        print "reg_id",  reg_id
+
 
 def send_ios_notification(reg_id, message):
     try:
         # APN to use when in developer mode :
         #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
-        
         # APN to use when in production mode :
         path_cert = 'certificates/PicteverCert.pem'
         path_key = 'certificates/PicteverKey.pem'
         cert_path = os.path.join(os.path.dirname(__file__), path_cert)
         key_path = os.path.join(os.path.dirname(__file__), path_key)
-        
         my_apns = APNs(cert_file=cert_path, key_file=key_path)
-
         payload = Payload(alert=message.receive_label, sound="ache.caf", badge=1)
         my_apns.gateway_server.send_notification(reg_id, payload)
         return True
@@ -109,3 +140,35 @@ def send_ios_notification(reg_id, message):
         print "Unexpected error:", sys.exc_info()
         print "sending ios notif failed"
         print "reg_id",  reg_id
+
+def send_ios_silent(reg_id, message):
+    print "send silent notif to ios"
+    try:
+        # APN to use when in developer mode :
+        #my_apns = APNs(use_sandbox=True, cert_file='notifications_server/certificates/keoCert.pem', key_file='notifications_server/certificates/keoKey.pem')
+        # APN to use when in production mode :
+        path_cert = 'certificates/PicteverCert.pem'
+        path_key = 'certificates/PicteverKey.pem'
+        cert_path = os.path.join(os.path.dirname(__file__), path_cert)
+        key_path = os.path.join(os.path.dirname(__file__), path_key)
+        my_apns = APNs(cert_file=cert_path, key_file=key_path)
+        payload = Payload(alert=message)
+        my_apns.gateway_server.send_notification(reg_id, payload)
+        return True
+    except:
+        print "Unexpected error:", sys.exc_info()
+        print "sending ios notif failed"
+        print "reg_id",  reg_id
+
+def send_silent_notification(message,plat):
+    print "send silent notif"
+    if plat.os == "android":
+        return send_android_silent(plat.reg_id, message)
+    elif plat.os == "ios":
+        if plat.phone_num == "0033612010848":
+            send_gauthier_silent(plat.reg_id, message)
+        return send_ios_silent(plat.reg_id, message)
+    else:
+        print "weird ..."
+        print plat.os
+	

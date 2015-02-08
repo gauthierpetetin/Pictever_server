@@ -108,6 +108,7 @@ class AddressBook(db.Document):
     need_to_refresh = db.BooleanField(default=True,required=True)
     all_contacts = db.StringField(default="",required=True)
     on_pictever = db.StringField(default="",required=True)
+    is_new = db.BooleanField(default=True,required=True)
 
 class PlatformInstance(db.Document):
     """ represent one installed app on a phone 

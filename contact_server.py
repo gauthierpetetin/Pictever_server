@@ -3,10 +3,12 @@ from notif_server import notif
 from threading import Thread
 import sys
 import json
+import datetime
 from instant_server.db import models
 models.connect()
 from instant_server.server.error_handler import prod_error_notif_mail
 import time
+bfm=datetime.datetime(2014,2,8,16,00,00,00)
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
@@ -49,14 +51,38 @@ def contact_check_loop():
 def check_new_contacts_in_address_books():
     while True:
 	try:
-	    print "la normalement on envoit des notifs pour avertir les gens que des contacts sont arrives sur l appli"
+	    print "on envoit les notifs pour avertir les gens que des contacts sont arrives sur l appli"
+	    for a in models.AddressBook.objects(is_new=True):
+		print "new address book detected",str(a.user_id)
+		u = models.User.objects.with_id(a.user_id)
+		if u.created_at > bfm:
+		    print "user created after bfm"
+		    json_contacts=json.loads(a.all_contacts)
+                    for c in json_contacts:
+                        plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
+                        if plat is not None:
+			    print "il a un contact sur Pictever, qui est : ",str(plat.user_id),plat.phone_num
+			    a_mec = models.AdressBook.objects(user_id=plat.user_id).first()
+			    if c.get("tel") in a_mec.all_contacts:
+				print "et il est dans l address book de ce contact"
+			        message=""
+			        for cont in json.loads(a_mec.all_contacts):
+				    if cont.get('tel')==c.get('tel'):
+				        message=cont.get('name')
+			        if message!="":
+				    if "0033" in plat.phone_num :
+			    	        message.append(" a rejoint Pictever!")
+				    else:
+				        message.append(" joined Pictever!")
+				    print "donc on envoit la notif a ce contact"
+			    	    notif.send_silent_notification(message,plat)
 	except:
             prod_error_notif_mail(
                 error_num=303,
                 object="check_new_contacts_in_address_books",
                 details="{}".format(sys.exc_info()),
                 critical_level="CRITICAL")
-	time.sleep(86400)
+	time.sleep(21600)
 
 if __name__ == '__main__':
     t1 = Thread(target = contact_check_loop)
