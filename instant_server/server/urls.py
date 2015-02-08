@@ -64,15 +64,17 @@ def login():
 		    	user.save()
 		    else:
 			user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
-       	    	    	user.save(validate=False)
+       	    	    	user.save()
 			prod_facebook_mail(email,facebook_name,country_code)
 		else:
 		    email=facebook_id + "@pictever.com"
             	    user = models.User    (email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code,facebook_id=facebook_id,facebook_name=facebook_name,facebook_birthday=facebook_birthday)
-       	    	    user.save(validate=False)
+       	    	    user.save()
 		    prod_facebook_mail(email,facebook_name,country_code)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
+	    user.country_code=country_code
+	    user.save()
             login_user(user)
             return json.dumps({
                 "user_id": str(user.id),
@@ -128,7 +130,7 @@ def sign_up():
         abort(406)
     try:
         new_user = models.User(email=email,password_hash=password_hash,created_at=datetime.datetime.now,country_code=country_code)
-        new_user.save(validate=False)
+        new_user.save()
 	if "@" in email:
 	    prod_signup_mail(email.replace(" ",""),country_code)
         return ""
@@ -418,12 +420,7 @@ def get_my_status():
 @login_required
 def get_send_choices():
     try:
-	plat = current_user.get_platform_instance()
-	if plat is not None:
-	    if plat.phone_num.startswith("0033") or plat.phone_num.startswith("0032") or plat.phone_num.startswith("0041"):
-		choices = models.SendChoice.get_active_choices('fr')
-	    else:
-		choices = models.SendChoice.get_active_choices(current_user.country_code)
+	choices = models.SendChoice.get_active_choices(current_user.country_code)
         return json.dumps(choices)
     except HTTPException as e:
 	try:
