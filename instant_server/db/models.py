@@ -335,9 +335,9 @@ class ReceiveLabel(db.Document):
         for r in ReceiveLabel.objects(active=True):
             if counter >= r.inf and counter <= r.sup :
        		 return r
-	return_label.color=get_rand_color()
         return return_label
 
+    @staticmethod
     def get_rand_color():
 	rand = random.randint(1,4)
 	if rand==1:
@@ -387,22 +387,22 @@ class SendChoice(db.Document):
         if delivery_option["type"] == "calendar":
 	    receive_counter = int(delivery_option["parameters"]) - time.time()
 	    r = ReceiveLabel.get_receive_label(receive_counter)
-            return (int(delivery_option["parameters"]),r.label,r.color)
+            return (int(delivery_option["parameters"]),r.label,ReceiveLabel.get_rand_color())
         elif delivery_option["type"] == "resend":
 	    rand = random.randint(5259487, 25000000)  # between 2 months and 8 months
 	    r = ReceiveLabel.get_receive_label(rand)
             delivery_time = time.time()+rand
-            return (delivery_time,r.label,r.color)
+            return (delivery_time,r.label,ReceiveLabel.get_rand_color())
 	elif delivery_option["type"] == "experimental": 
 	    rand = random.randint(150000, 1200000) # random in few days
 	    r = ReceiveLabel.get_receive_label(rand)
             delivery_time = time.time() + rand
-            return (delivery_time,r.label,r.color)
+            return (delivery_time,r.label,ReceiveLabel.get_rand_color())
         else:
             send_choice = SendChoice.objects.with_id(delivery_option["type"])
 	    dt = send_choice.get_delivery_time(time.time())
 	    r = ReceiveLabel.get_receive_label(dt-time.time())
-            return (dt,r.label,r.color)
+            return (dt,r.label,ReceiveLabel.get_rand_color())
 
     def get_delivery_time(self, send_time):
         if self.time_random:
