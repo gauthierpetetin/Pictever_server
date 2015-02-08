@@ -36,18 +36,18 @@ def who_is_on_pictever():
 	print "FINI POUR ",str(a.user_id)
 
 def contact_check_loop():
-    print "[]"
-    try:
-	who_is_on_pictever()
-    except:
-	print sys.exc_info()
-	prod_error_notif_mail(
-	     error_num=203,
-	     object=" main contact loop",
-	     details="{}".format(sys.exc_info()),
-	     critical_level="CRITICAL")
-    time.sleep(1)
-    contact_check_loop()
+    while True:
+	print "[]"
+    	try:
+	    who_is_on_pictever()
+    	except:
+	    print sys.exc_info()
+	    prod_error_notif_mail(
+	     	error_num=203,
+	     	object=" main contact loop",
+	     	details="{}".format(sys.exc_info()),
+	     	critical_level="CRITICAL")
+    	time.sleep(1)
 
 def check_new_contacts_in_address_books():
     while True:
