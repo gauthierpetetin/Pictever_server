@@ -102,7 +102,7 @@ class Message(db.Document):
             bottle.save()
 	else:
 	    if str(current_user.id)=='53bbc1f971c5d3000264842e' and str(receiver_id)!=str(current_user.id):
-		u = User.object.with_id(receiver_id)
+		u = User.objects.with_id(receiver_id)
 		if u is not None and u.get_platform_instance() is not None:
 		    a = AddressBook.objects(user_id=receiver_id).first()
 		    if a is not None:
