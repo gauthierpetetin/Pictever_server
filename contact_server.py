@@ -81,13 +81,11 @@ def check_new_contacts_in_address_books():
 				    print "et user est dans l address book de ce contact"
 			            message=""
 			            for cont in json.loads(a_mec.all_contacts):
-					print "comparing ",u.get_platform_instance().phone_num,' to ',cont.get('tel')
 				        if cont.get('tel')==u.get_platform_instance().phone_num:
-					    print "YES on a trouve 1011"
+					    print "On a trouve le nom de user dans l address book du contact"
 				            message=cont.get('name')
-					    print message
 			            if message!="":
-				        if plat.phone_num.starts_with("0033"):
+				        if plat.phone_num.startswith("0033"):
 			    	            message+=" a rejoint Pictever!"
 				        else:
 				            message+=" joined Pictever!"

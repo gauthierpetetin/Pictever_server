@@ -121,7 +121,7 @@ def login():
 def sign_up():
     email = request.form['email']
     password_hash = request.form['password']
-    country_code = request.form['country_code']
+    country_code = request.form.get('country_code')
     if country_code is None :
 	country_code = 'us'
     else:
