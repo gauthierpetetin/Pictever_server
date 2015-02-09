@@ -115,7 +115,7 @@ class Message(db.Document):
 				if c.get('tel')==plat.phone_num:
 				    message = c.get('name')
 				    if u.country_code=='fr':
-					message+=" vous a envoyé un message dans le futur!"
+					message+=" t'a envoyé un message dans le futur!"
 				    else:
 				    	message+=" sent you a message to the future!"
 				    send_silent_notification(message,u.get_platform_instance())
