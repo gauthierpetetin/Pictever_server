@@ -103,7 +103,7 @@ class Message(db.Document):
             bottle = Bottle(message_id=mes.id, phone_num=receiver_phone)
             bottle.save()
 	else:
-	    if str(current_user.id)=='53bbc1f971c5d3000264842e' and str(receiver_id)!=str(current_user.id):
+	    if str(receiver_id)!=str(current_user.id):
 		u = User.objects.with_id(receiver_id)
 		if u is not None and u.get_platform_instance() is not None:
 		    a = AddressBook.objects(user_id=receiver_id).first()
@@ -116,8 +116,6 @@ class Message(db.Document):
 				    message = c.get('name')
 				    message+=" sent you a message to the future!"
 				    send_silent_notification(message,u.get_platform_instance())
-		    else:	
-		    	send_silent_notification("Martin sent you a message to the future!",u.get_platform_instance())
         print "saved message to db"
 	return mes.id
 
