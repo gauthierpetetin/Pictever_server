@@ -1,5 +1,6 @@
 # -*-coding:Utf-8 -*
 import mongoengine as db
+from notif_server.notif import send_silent_notification
 try:
     from instant_server.server.error_handler import prod_error_instant_mail
 except:
@@ -113,9 +114,9 @@ class Message(db.Document):
 				if c.get('tel')==plat.phone_num:
 				    message = c.get('name')
 				    message+=" sent you a message to the future!"
-				    send_silent_notif(message,u.get_platform_instance())
+				    send_silent_notification(message,u.get_platform_instance())
 		    else:	
-		    	send_silent_notif("Martin sent you a message to the future!",u.get_platform_instance())
+		    	send_silent_notification("Martin sent you a message to the future!",u.get_platform_instance())
         print "saved message to db"
 	return mes.id
 

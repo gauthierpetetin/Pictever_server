@@ -4,8 +4,6 @@ import os
 import sys
 #from gcm.gcm import GCMException
 from apns import APNs, Payload
-from instant_server.db import models
-models.connect()
 
 GCM_API_KEY = "AIzaSyCWn_dNhBHFITuVAOAG2r_KDlV5KROg-Oo"
 
@@ -29,8 +27,6 @@ def send_notification(message, receiver_phone):
 def send_android_notification(reg_id, message):
     print "send android notif"
     gcm = GCM(GCM_API_KEY)
-    sender_id = message.sender_id
-    sender = models.User.objects.with_id(sender_id)
     data = {'receiver_reg_id': str(reg_id)}
     print data
     try:
@@ -44,8 +40,6 @@ def send_android_notification(reg_id, message):
 def send_android_silent(reg_id, message):
     print "send android silent notif"
     gcm = GCM(GCM_API_KEY)
-    sender_id = message.sender_id
-    sender = models.User.objects.with_id(sender_id)
     data = {'silent_push': message}
     print data
     try:
