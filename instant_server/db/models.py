@@ -1,5 +1,6 @@
 # -*-coding:Utf-8 -*
 import mongoengine as db
+from notif_server.notif import send_silent_notification
 try:
     from instant_server.server.error_handler import prod_error_instant_mail
 except:
@@ -8,6 +9,7 @@ except:
 import datetime
 import random
 import time
+import json
 
 def connect(read_only=False):
     if read_only:
@@ -100,6 +102,23 @@ class Message(db.Document):
         if receiver_phone is not None:
             bottle = Bottle(message_id=mes.id, phone_num=receiver_phone)
             bottle.save()
+	else:
+	    if str(receiver_id)!=str(current_user.id):
+		u = User.objects.with_id(receiver_id)
+		if u is not None and u.get_platform_instance() is not None:
+		    a = AddressBook.objects(user_id=receiver_id).first()
+		    if a is not None:
+			plat = current_user.get_platform_instance()
+			if plat is not None:
+			    json_contacts = json.loads(a.all_contacts)
+			    for c in json_contacts:
+				if c.get('tel')==plat.phone_num:
+				    message = c.get('name')
+				    if u.country_code=='fr':
+					message+=" t'a envoyé un message dans le futur!"
+				    else:
+				    	message+=" sent you a message to the future!"
+				    send_silent_notification(message,u.get_platform_instance())
         print "saved message to db"
 	return mes.id
 
