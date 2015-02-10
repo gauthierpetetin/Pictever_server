@@ -110,9 +110,9 @@ class Message(db.Document):
 		    if a is not None:
 			plat = current_user.get_platform_instance()
 			if plat is not None:
-			    json_contacts = json.loads(a.all_contacts)
+			    json_contacts = json.loads(a.on_pictever)
 			    for c in json_contacts:
-				if c.get('tel')==plat.phone_num:
+				if c.get('phoneNumber1')==plat.phone_num:
 				    message = c.get('name')
 				    if u.country_code=='fr':
 					message+=" t'a envoyé un message dans le futur!"
