@@ -41,7 +41,6 @@ def send_android_silent(reg_id, message):
     print "send android silent notif"
     gcm = GCM(GCM_API_KEY)
     data = {'silent_push': message}
-    print data
     try:
         gcm.plaintext_request(registration_id=reg_id, data=data)
         return True

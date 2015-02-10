@@ -119,6 +119,7 @@ class Message(db.Document):
 				    else:
 				    	message+=" sent you a message to the future!"
 				    send_silent_notification(message,u.get_platform_instance())
+				    break
         print "saved message to db"
 	return mes.id
 
