@@ -28,6 +28,7 @@ def update_address_book(a_id):
 	    plat = models.PlatformInstance.objects(phone_num=c.get("tel")).order_by('-id').first()
 	    if plat is not None:
 	    	infos = {}
+		infos["name"] = c.get("name")
             	infos["phoneNumber1"] = c.get("tel")
             	infos["email"] = ""
             	infos["facebook_id"] = ""
@@ -84,6 +85,7 @@ def check_new_contacts_in_address_books():
 				        if cont.get('tel')==u.get_platform_instance().phone_num:
 					    print "On a trouve le nom de user dans l address book du contact"
 				            message=cont.get('name')
+					    break
 			            if message!="":
 				        if plat.phone_num.startswith("0033"):
 			    	            message+=" a rejoint Pictever!"
