@@ -54,25 +54,33 @@ class Message(db.Document):
 	print "rand",rand
 	t = time.mktime(mes.delivery_time.utctimetuple()) + rand
 	r = ReceiveLabel.get_receive_label(t-time.mktime(mes.created_at.utctimetuple()))
-	mes.receive_label = r.label
+	if user.country_code=='fr':
+	    mes.receive_label = r.label_fr
+	else:
+	    mes.receive_label = r.label
 	print r.label
-	mes.receive_color = r.color
+	mes.receive_color = ReceiveLabel.get_rand_color()
 	mes.delivery_time = datetime.datetime.fromtimestamp(t)
 	mes.notif_delivered = False
 	mes.save()
 	return mes.id	
 
     @staticmethod
-    def add_to_db(current_user, message, receiver_id,delivery_time_ts,receive_label,receive_color,photo_id,video_id,sound_id):
+    def add_to_db(current_user, message, receiver_id,delivery_time_ts,photo_id,video_id,sound_id):
         if receiver_id[:2] == "id":
             print "id detected"
             receiver_id = receiver_id[2:]
+	    country_code = User.objects.with_id(receiver_id).country_code
             receiver_phone = None
 	    is_blocked = False
         elif receiver_id[:3] == "num":
             print "phone number then"
             receiver_phone = receiver_id[3:]
             receiver_id = current_user.id
+	    if receiver_phone.startswith("0033"):
+	    	country_code = 'fr'
+	    else:
+		country_code = 'us'
 	    is_blocked = True	
         else:
             print "error cannot understand id"
@@ -82,8 +90,12 @@ class Message(db.Document):
                 details="{}".format("error cannot understand id : {}".format(receiver_id)),
                 critical_level="ERROR")
             return None
-        #delivery_time_ts, receive_label,receive_color = SendChoice.process_delivery_option(delivery_option)
         delivery_time = datetime.datetime.fromtimestamp(delivery_time_ts)
+	r = ReceiveLabel.get_receive_label(delivery_time_ts-time.time())
+	if country_code=='fr':
+	    receive_label = r.label_fr
+	else:
+	    receive_label = r.label
         mes = Message(
             message=message,
             receiver_id=receiver_id,
@@ -95,7 +107,7 @@ class Message(db.Document):
 	    video_id=video_id,
 	    sound_id=sound_id,
             receive_label=receive_label,
-            receive_color=receive_color,
+            receive_color=ReceiveLabel.get_rand_color(),
             version="1.0"
         )
         mes.save()
@@ -354,7 +366,6 @@ class ReceiveLabel(db.Document):
 
     @staticmethod
     def get_receive_label(counter):
-	print str(counter)
 	return_label = ReceiveLabel.objects().order_by('id').first()
         for r in ReceiveLabel.objects(active=True):
             if counter >= r.inf and counter <= r.sup :
@@ -367,9 +378,9 @@ class ReceiveLabel(db.Document):
 	if rand==1:
 	    return "ffdc1a" #jaune
 	if rand==2:
-	    return "f6591e" #orange
-	if rand==3:
 	    return "6bb690" #vert
+	if rand==3:
+	    return "f6591e" #orange
 	if rand==4:
 	    return "f36f4d" #rouge
 
@@ -409,24 +420,10 @@ class SendChoice(db.Document):
     @staticmethod
     def process_delivery_option(delivery_option):
         if delivery_option["type"] == "calendar":
-	    receive_counter = int(delivery_option["parameters"]) - time.time()
-	    r = ReceiveLabel.get_receive_label(receive_counter)
-            return (int(delivery_option["parameters"]),r.label,ReceiveLabel.get_rand_color())
-        elif delivery_option["type"] == "resend":
-	    rand = random.randint(5259487, 25000000)  # between 2 months and 8 months
-	    r = ReceiveLabel.get_receive_label(rand)
-            delivery_time = time.time()+rand
-            return (delivery_time,r.label,ReceiveLabel.get_rand_color())
-	elif delivery_option["type"] == "experimental": 
-	    rand = random.randint(150000, 1200000) # random in few days
-	    r = ReceiveLabel.get_receive_label(rand)
-            delivery_time = time.time() + rand
-            return (delivery_time,r.label,ReceiveLabel.get_rand_color())
+            return int(delivery_option["parameters"])
         else:
             send_choice = SendChoice.objects.with_id(delivery_option["type"])
-	    dt = send_choice.get_delivery_time(time.time())
-	    r = ReceiveLabel.get_receive_label(dt-time.time())
-            return (dt,r.label,ReceiveLabel.get_rand_color())
+            return send_choice.get_delivery_time(time.time())
 
     def get_delivery_time(self, send_time):
         if self.time_random:
