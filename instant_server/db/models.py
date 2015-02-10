@@ -115,7 +115,7 @@ class Message(db.Document):
             bottle = Bottle(message_id=mes.id, phone_num=receiver_phone)
             bottle.save()
 	else:
-	    if str(receiver_id)!=str(current_user.id):
+	    if str(receiver_id)!=str(current_user.id) and delivery_time_ts-time.time() > 200:
 		u = User.objects.with_id(receiver_id)
 		if u is not None and u.get_platform_instance() is not None:
 		    a = AddressBook.objects(user_id=receiver_id).first()
