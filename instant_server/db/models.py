@@ -114,10 +114,11 @@ class Message(db.Document):
 			    for c in json_contacts:
 				if c.get('phoneNumber1')==plat.phone_num:
 				    message = c.get('name')
+				    r = ReceiveLabel.get_receive_label(delivery_time_ts-time.time())
 				    if u.country_code=='fr':
-					message+=" t'a envoyé un message dans le futur!"
+					message+=" vient de t'envoyer un message. Tu le recevras "+r.future_label_fr+" !"
 				    else:
-				    	message+=" sent you a message to the future!"
+				    	message+=" just sent you a message. You will receive it "+r.future_label+" !"
 				    send_silent_notification(message,u.get_platform_instance())
 				    break
         print "saved message to db"
@@ -344,6 +345,9 @@ class Status(db.Document):
 class ReceiveLabel(db.Document):
     active = db.BooleanField(default=False)
     label = db.StringField(default="",required=True)
+    label_fr = db.StringField(default="",required=True)
+    future_label = db.StringField(default="",required=True)
+    future_label_fr = db.StringField(default="",required=True)
     color = db.StringField(default="",required=True)
     inf = db.IntField(required=True)
     sup = db.IntField(required=True)
