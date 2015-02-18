@@ -74,7 +74,10 @@ def login():
 		    prod_facebook_mail(email,facebook_name,country_code)
         if (facebook_id is not None and facebook_id!="") or user.password_hash == password_hash:
             user.set_reg_id_os_and_version(os, reg_id, app_version)
-	    user.country_code=country_code
+	    if user.country_code=='fr' and country_code=='us':
+		print "weird country code was FR and now you want to change it to US..."
+	    else:
+	    	user.country_code=country_code
 	    user.last_log_time = datetime.datetime.now()
 	    user.save()
             login_user(user)
