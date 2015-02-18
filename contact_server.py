@@ -8,7 +8,7 @@ from instant_server.db import models
 models.connect()
 from instant_server.server.error_handler import prod_error_notif_mail
 import time
-bfm=datetime.datetime(2014,2,8,16,00,00,00)
+bfm=datetime.datetime(2015,2,18,16,00,00,00)
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
@@ -45,6 +45,11 @@ def update_address_book(a_id):
 	        notif.send_android_get_address_book(plat.reg_id)
     	print "END FOR ",str(a.user_id)
     except:
+	prod_error_notif_mail(
+                error_num=300,
+                object="update_address_books",
+                details="{}{}".format(sys.exc_info(),str(a.id)),
+                critical_level="CRITICAL")
 	a.need_to_refresh=True
    	a.save()
 

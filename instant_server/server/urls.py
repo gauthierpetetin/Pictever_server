@@ -36,6 +36,7 @@ def login():
     else:
 	info=facebook_id
     if country_code is None :
+	print "country code is None"
 	country_code = 'us'
     else:
 	country_code = country_code.lower()
