@@ -82,7 +82,7 @@ def message_check_loop():
                 object=" main notification loop",
                 details="{}".format(sys.exc_info()),
                 critical_level="CRITICAL")
-        time.sleep(5)
+        time.sleep(2)
 
 def send_no_phone_mail():
     while True:
