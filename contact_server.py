@@ -8,7 +8,7 @@ from instant_server.db import models
 models.connect()
 from instant_server.server.error_handler import prod_error_notif_mail
 import time
-bfm=datetime.datetime(2014,2,8,16,00,00,00)
+bfm=datetime.datetime(2015,2,18,16,00,00,00)
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
@@ -22,6 +22,9 @@ def update_address_book(a_id):
     try:
    	a = models.AddressBook.objects.with_id(a_id)
     	print "address_book of ",str(a.user_id), " currenlty checking "
+	if not a.all_contacts.endswith("\"}]"):
+            a.all_contacts=a.all_contacts+"\"}]"
+            a.save()
     	list_contacts = json.loads(a.all_contacts)
     	on_pictever=[]
         for c in list_contacts:
