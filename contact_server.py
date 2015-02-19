@@ -65,6 +65,20 @@ def contact_check_loop():
 	     	critical_level="CRITICAL")
     	time.sleep(1)
 
+def update_status(on_pictever):
+    print on_pictever
+    try:
+	json_pictever = json.loads(on_pictever)
+	for c in json_pictever:
+	    u = models.User.objects.with_id(c["user_id"])
+	    if u is not None:
+		print "status in address book : ", c["status"], " real status : ", u.status
+		c["status"]=u.status
+	return json.dumps(json_pictever)
+    except:
+	print sys.exc_info()
+
+
 def check_new_contacts_in_address_books():
     while True:
 	try:

@@ -9,6 +9,7 @@ from flask import request, abort
 from instant_server.server import app, login_manager
 from instant_server.server.error_handler import prod_error_instant_mail, prod_reset_mail, prod_signup_mail,prod_facebook_mail,id_generator
 from instant_server.db import models
+from contact_server import update_status
 models.connect()
 from mongoengine.queryset import DoesNotExist
 from flask_login import login_required, current_user, login_user
@@ -524,6 +525,9 @@ def upload_address_book():
     	    	address_book.all_contacts = contact_json
 	    	address_book.need_to_refresh=True
     	    	address_book.save()
+	    else:
+		if current_user.email=='martin.charrel@gmail.com':
+		    address_book.on_pictever = update_status(address_book.on_pictever)
 	return ""
     except HTTPException as e:
 	try:
