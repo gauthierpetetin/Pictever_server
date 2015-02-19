@@ -8,7 +8,7 @@ from instant_server.db import models
 models.connect()
 from instant_server.server.error_handler import prod_error_notif_mail
 import time
-bfm=datetime.datetime(2014,2,8,16,00,00,00)
+bfm=datetime.datetime(2015,2,18,16,00,00,00)
 
 def who_is_on_pictever():
     for a in models.AddressBook.objects(need_to_refresh=True):
