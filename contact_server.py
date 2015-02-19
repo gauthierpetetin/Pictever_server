@@ -45,11 +45,6 @@ def update_address_book(a_id):
 	        notif.send_android_get_address_book(plat.reg_id)
     	print "END FOR ",str(a.user_id)
     except:
-	prod_error_notif_mail(
-                error_num=300,
-                object="update_address_books",
-                details="{}{}".format(sys.exc_info(),str(a.id)),
-                critical_level="CRITICAL")
 	a.need_to_refresh=True
    	a.save()
 
