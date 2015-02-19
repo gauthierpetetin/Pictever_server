@@ -22,6 +22,9 @@ def update_address_book(a_id):
     try:
    	a = models.AddressBook.objects.with_id(a_id)
     	print "address_book of ",str(a.user_id), " currenlty checking "
+	if not a.all_contacts.endswith("\"}]"):
+            a.all_contacts=a.all_contacts+"\"}]"
+            a.save()
     	list_contacts = json.loads(a.all_contacts)
     	on_pictever=[]
         for c in list_contacts:
