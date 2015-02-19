@@ -526,8 +526,7 @@ def upload_address_book():
 	    	address_book.need_to_refresh=True
     	    	address_book.save()
 	    else:
-		if current_user.email=='martin.charrel@gmail.com':
-		    address_book.on_pictever = update_status(address_book.on_pictever)
+		address_book.on_pictever = update_status(address_book.on_pictever)
 	return ""
     except HTTPException as e:
 	try:
