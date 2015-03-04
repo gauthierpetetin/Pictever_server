@@ -503,6 +503,22 @@ def get_address_book():
 @login_required
 def upload_address_book():
     contact_json = request.form['address_book']
+    if not contact_json.endswith("\"}]"):
+    	details="User email : "+current_user.email+ "\r\n"
+    	plat = current_user.get_platform_instance()
+    	if plat is not None:
+    		details+="User OS : " + plat.os + "\r\n"
+    		details+="User phone : " + plat.phone_num + "\r\n"
+    	details+="Address book formed : " + "\r\n" + contact_json
+    	try:
+    		prod_error_instant_mail(
+                error_num=76,
+                object="wrong address book format",
+                details=details,
+                critical_level="ERROR")
+    	except:
+    		print sys.exc_info()
+    		print "error sending mail"
     try:
         address_book = models.AddressBook.objects(user_id=current_user.id).first()
 	if address_book is None:
@@ -526,7 +542,8 @@ def upload_address_book():
 	    	address_book.need_to_refresh=True
     	    	address_book.save()
 	    else:
-		address_book.on_pictever = update_status(address_book.on_pictever)
+		if current_user.email=='martin.charrel@gmail.com':
+		    address_book.on_pictever = update_status(address_book.on_pictever)
 	return ""
     except HTTPException as e:
 	try:
