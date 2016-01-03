@@ -42,7 +42,6 @@ python-gcm==0.1.5
 python-postmark==0.4.3
 pyxdg==0.25
 requests==2.9.1
-sessioninstaller==0.0.0
 simplegeneric==0.8.1
 six==1.10.0
 sphinx-rtd-theme==0.1.9
