@@ -27,6 +27,7 @@ class Message(db.Document):
     is_blocked = db.BooleanField(default=False)
     sender_id = db.ObjectIdField()
     receiver_id = db.ObjectIdField()
+    receiver_phone = db.StringField()
     message = db.StringField(required=True)
     photo_id = db.StringField(default="", required=True)
     video_id = db.StringField(default="", required=True)
