@@ -9,7 +9,6 @@ Sphinx==1.3.3
 Werkzeug==0.9.4
 apns==1.1.2
 argparse==1.2.1
-debtagshw==0.1
 decorator==4.0.6
 defer==1.0.6
 dirspec==13.10
