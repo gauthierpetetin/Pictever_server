@@ -34,7 +34,6 @@ path.py==8.1.2
 pexpect==4.0.1
 ptyprocess==0.5
 pycrypto==2.6.1
-pycups==1.9.66
 pymongo==2.8
 pyserial==2.6
 pysmbc==1.0.14.1
