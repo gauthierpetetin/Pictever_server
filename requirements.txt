@@ -36,10 +36,8 @@ ptyprocess==0.5
 pycrypto==2.6.1
 pymongo==2.8
 pyserial==2.6
-pysmbc==1.0.14.1
 python-gcm==0.1.5
 python-postmark==0.4.3
-pyxdg==0.25
 requests==2.9.1
 simplegeneric==0.8.1
 six==1.10.0
